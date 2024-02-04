@@ -1,0 +1,71 @@
+figd_xgroKPJxDyptSfmzzrurwjUQp2a0VL1t-ZE0Xw0u
+
+
+
+
+window.geometry("1024x600")
+window.configure(bg = "#FFFFFF")
+window.title("SmartTimeTable")
+window.attributes("-fullscreen", True)
+
+
+
+
+dragging = False
+last_x_position = 0
+
+def start_drag(event):
+    global dragging, last_x_position
+    # Check if the mouse is over image_1
+    overlapping = canvas.find_overlapping(event.x - 1, event.y - 1, event.x + 1, event.y + 1)
+    if image_1 in overlapping:
+        dragging = True
+        last_x_position = event.x
+
+def drag(event):
+    global dragging, last_x_position
+    if dragging:
+        # Calculate how much the mouse moved
+        x_movement = event.x - last_x_position
+        # Get the current position of image_1
+        current_position = canvas.coords('image_1')
+        # Check if the new position is within the desired range
+        if 90 <= current_position[0] + x_movement <= 901:
+            # Move image_1 and the text
+            canvas.move('image_1', x_movement, 0)
+            canvas.move('text', x_movement, 0)
+        last_x_position = event.x
+
+def stop_drag(event):
+    global dragging
+    dragging = False
+
+# Bind the events to the functions
+canvas.bind("<Button-1>", start_drag)
+canvas.bind("<B1-Motion>", drag)
+canvas.bind("<ButtonRelease-1>", stop_drag)
+
+
+
+
+
+
+def change_text():
+    canvas.itemconfig('text', text='New Text')
+
+    
+button_image_1 = PhotoImage(
+    file=relative_to_assets("button_1.png"))
+button_1 = Button(
+    image=button_image_1,
+    borderwidth=0,
+    highlightthickness=0,
+    command=change_text,
+    relief="flat"
+)
+button_1.place(
+    x=904.0,
+    y=540.0,
+    width=80.0,
+    height=45.0
+)
