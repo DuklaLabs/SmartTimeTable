@@ -69,3 +69,9 @@ button_1.place(
     width=80.0,
     height=45.0
 )
+
+
+
+
+
+

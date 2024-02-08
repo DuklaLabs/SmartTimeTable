@@ -1,0 +1,1539 @@
+
+canvas.create_text(
+    1633.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1573.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1423.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1273.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1123.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    973.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    823.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    673.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    523.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    373.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    223.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    485.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    454.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    73.0,
+    468.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1573.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1423.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1273.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1123.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    973.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    823.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    673.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    523.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    373.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    223.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    410.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    379.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    73.0,
+    393.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1573.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1423.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1273.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1123.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    973.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    823.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    673.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    523.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    373.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    223.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    335.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    304.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    73.0,
+    318.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1573.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1423.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1273.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1123.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    973.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    823.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    673.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    523.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    373.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    223.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    260.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    229.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    73.0,
+    243.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1633.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1573.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1483.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1423.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1333.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1273.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1183.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    1123.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    1033.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    973.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    883.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    823.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    733.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    673.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    583.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    523.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    433.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    373.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    283.0,
+    154.0,
+    anchor="center",
+    text="2.ER P1",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    223.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    185.0,
+    anchor="center",
+    text="Xx",
+    fill="#D3D3D3",
+    font=("Inter Light", 26 * -1)
+)
+
+canvas.create_text(
+    133.0,
+    154.0,
+    anchor="center",
+    text="0.XX",
+    fill="#D3D3D3",
+    font=("Inter Light", 22 * -1)
+)
+
+canvas.create_text(
+    73.0,
+    168.0,
+    anchor="center",
+    text="XXc",
+    fill="#D3D3D3",
+    font=("Inter Light", 30 * -1)
+)
+
+canvas.create_text(
+    7.0,
+    190.0,
+    anchor="center",
+    text="27.12.",
+    fill="#D3D3D3",
+    font=("Inter", 21 * -1)
+)
+
+canvas.create_text(
+    7.0,
+    265.0,
+    anchor="center",
+    text="28.12.",
+    fill="#D3D3D3",
+    font=("Inter", 21 * -1)
+)
+
+canvas.create_text(
+    7.0,
+    415.0,
+    anchor="center",
+    text="30.12.",
+    fill="#D3D3D3",
+    font=("Inter", 21 * -1)
+)
+
+canvas.create_text(
+    7.0,
+    340.0,
+    anchor="center",
+    text="29.12.",
+    fill="#D3D3D3",
+    font=("Inter", 21 * -1)
+)
+
+canvas.create_text(
+    7.0,
+    490.0,
+    anchor="center",
+    text="31.12.",
+    fill="#D3D3D3",
+    font=("Inter", 21 * -1)
+)
+
+canvas.create_text(
+    643.0,
+    17.0,
+    anchor="center",
+    text="12:00   31.12.2024",
+    fill="#B5B5B5",
+    font=("Inter", 33 * -1)
+)
