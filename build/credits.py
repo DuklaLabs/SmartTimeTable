@@ -4,14 +4,17 @@
 
 
 from pathlib import Path
+from subprocess import Popen
+import sys
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from PIL import Image,ImageTk
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\frame1")
+ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -25,28 +28,21 @@ window.geometry("1024x600")
 window.configure(bg = "#FFFFFF")
 window.title("SmartTimeTable V0.4 - Credits")
 window.attributes("-fullscreen", True)
+window.config(cursor = "none")
 
 canvas = Canvas(
     window,
-    bg = "#FFFFFF",
+    bg = "#2F2F2F",
     height = 600,
     width = 1024,
     bd = 0,
     highlightthickness = 0,
     relief = "ridge"
 )
-
 canvas.place(x = 0, y = 0)
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#2F2F2F",
-    outline="")
 
 button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
+    file=relative_to_assets("Exit.png"))
 button_1 = Button(
     image=button_image_1,
     borderwidth=0,
@@ -61,22 +57,107 @@ button_1.place(
     height=60.0
 )
 
-canvas.create_text(
-    200.0,
-    100.0,
-    anchor="nw",
-    text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam egestas wisi a erat. Etiam neque. Nunc auctor. Nulla est. Pellentesque pretium lectus id turpis. Pellentesque ipsum. Proin in tellus sit amet nibh dignissim sagittis. Suspendisse nisl. Quisque tincidunt scelerisque libero. Duis condimentum augue id magna semper rutrum. Cras elementum. Donec vitae arcu. Sed elit dui, pellentesque a, faucibus vel, interdum nec, diam. Curabitur vitae diam non enim vestibulum interdum. Etiam neque. Aenean id metus id velit ullamcorper pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos.\nNullam sit amet magna in magna gravida vehicula. Etiam neque. Fusce aliquam vestibulum ipsum. Etiam posuere lacus quis dolor. Phasellus et lorem id felis nonummy placerat. Nullam at arcu a est sollicitudin euismod. Integer vulputate sem a nibh rutrum consequat. Nullam faucibus mi quis velit. Integer tempor. Mauris dolor felis, sagittis at, luctus sed, aliquam non, tellus. Vestibulum erat nulla, ullamcorper nec, rutrum non, nonummy ac, erat. Aliquam erat volutpat. Integer rutrum, orci vestibulum ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Integer tempor.",
-    fill="#FFFFFF",
-    font=("Kanit Regular", 30 * -1)
-)
 
+
+
+
+
+#Create a 600 wide block of text that is aligned in the center
+text = Text(window, wrap="word", width=600, height=600, bg="#2F2F2F", fg="#FFFFFF", font=("Kanit Regular", 16))
+
+#center the heading in the window
 canvas.create_text(
-    150.0,
-    0.0,
-    anchor="nw",
+    512.0,
+    50.0,
+    anchor="center",
     text="SmartTimeTable V0.4 by DuklaLabs",
     fill="#D24B49",
     font=("Kanit Regular", 40 * -1)
 )
+
+canvas.create_text(512, 120, anchor="center", text="Projekt chytrého rozvrhu sponzorován vedením školy", fill="#FFFFFF", font=("Kanit", 26 * -1))
+
+canvas.create_text(512, 200, anchor="center", text="Poháněn je RasperyPi zero 2 W", fill="#FFFFFF", font=("Kanit", 28 * -1))
+canvas.create_text(512, 240, anchor="center", text="Zobrazen je na 10.1“ TFT LCD display", fill="#FFFFFF", font=("Kanit", 28 * -1))
+figma_text = canvas.create_text(512, 280, anchor="center", text="Grafické rozhraní je vytvořeno softwarem Figma", fill="#FFFFFF", font=("Kanit", 28 * -1))
+canvas.create_text(512, 320, anchor="center", text="S použitím knihovny TKinter designer pro import GUI", fill="#FFFFFF", font=("Kanit", 28 * -1))
+
+canvas.create_text(512, 400, anchor="center", text="Pro více info se obraťte na DuklaLabs CEO – Jan Petrášek", fill="#FFFFFF", font=("Kanit", 28 * -1))
+
+#if the DuklaLabs logo get clicked three time in 10 seconds, change the "Figma" text to "Ligma"
+def change_figma_text(new_text):
+    canvas.itemconfigure(figma_text, text=new_text)
+
+
+
+
+
+button_image_5 = PhotoImage(
+    file=relative_to_assets("Video.png"))
+button_5 = Button(
+    image=button_image_5,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "playVideo.py")]),
+    relief="flat"
+)
+button_5.place(
+    x=923,
+    y=180,
+    width=70.0,
+    height=70.0
+)
+
+
+
+
+
+
+image_image_1 = PhotoImage(
+    file=relative_to_assets("SchoolLogo.png"))
+image_1 = canvas.create_image(
+    231.0,
+    530.0,
+    image=image_image_1
+)
+
+image_image_2 = PhotoImage(
+    file=relative_to_assets("GithubQRCode.png"))
+image_2 = canvas.create_image(
+    939,
+    514.0,
+    image=image_image_2
+)
+
+click_count = 0
+
+def increase_click_count():
+    window.after(3000, reset_click_count)
+    global click_count
+    click_count += 1
+    if click_count == 3:
+        change_figma_text("Grafické rozhraní je vytvořeno softwarem Ligma")
+
+def reset_click_count():
+    global click_count
+    click_count = 0
+    change_figma_text("Grafické rozhraní je vytvořeno softwarem Figma")
+
+button_image_2 = PhotoImage(
+    file=relative_to_assets("DuklaLabsLogo.png"))
+button_2 = Button(
+    image=button_image_2,
+    borderwidth=0,
+    highlightthickness=0,
+    command=increase_click_count,
+    relief="flat"
+)
+button_2.place(
+    x=505.0,
+    y=530.0,
+    width=115.0,
+    height=115.0
+)
+
 window.resizable(False, False)
 window.mainloop()

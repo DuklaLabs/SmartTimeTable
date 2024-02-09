@@ -11,7 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\timetable")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -22,8 +22,9 @@ window = Tk()
 
 window.geometry("1024x600")
 window.configure(bg = "#FFFFFF")
-window.title("SmartTimeTable V0.4")
+window.title("SmartTimeTable V0.4 by DuklaLabs")
 window.attributes("-fullscreen", True)
+window.config(cursor = "none")
 
 
 canvas = Canvas(
@@ -35,15 +36,8 @@ canvas = Canvas(
     highlightthickness = 0,
     relief = "ridge"
 )
-
 canvas.place(x = 0, y = 0)
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#2F2F2F",
-    outline="")
+
 
 image_image_1 = PhotoImage(
     file=relative_to_assets("image_1.png"))
@@ -118,7 +112,7 @@ def time():
     string = strftime('%H:%M   %d.%m.%Y')
     lbl.configure(text=string)
     lbl.after(1000, time)
- 
+
 
 lbl = Label(window, font=('Inter', 28), background = '#303030', foreground = '#B6B6B6')
 
@@ -160,7 +154,7 @@ button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
+    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "credits.py")]),
     relief="flat"
 )
 button_1.place(
@@ -230,8 +224,8 @@ button_5 = Button(
 button_5.place(
     x=43.0,
     y=540.0,
-    width=80.0,
-    height=20.0
+    width=150.0,
+    height=45.0
 )
 
 
@@ -242,8 +236,7 @@ button_6 = Button(
     image=button_image_6,
     borderwidth=0,
     highlightthickness=0,
-    #open the credits window when clicked using the Popen function
-    command = lambda: Popen([sys.executable, str(OUTPUT_PATH / "credits.py")]),
+    command = lambda: window.destroy(),
     relief="flat"
 )
 button_6.place(
