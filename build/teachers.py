@@ -1,6 +1,8 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Scrollbar, VERTICAL, Frame
 
+import globals
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\teachers")
 
@@ -30,7 +32,7 @@ canvas = Canvas(
 canvas.place(x=0, y=0)
 
 canvas_buttons = Canvas(window, bg="#2F2F2F", highlightthickness=0)
-canvas_buttons.place(x=0, y=100, width=1024, height=500)  # Adjust the position and size as needed
+canvas_buttons.place(x=0, y=100, width=1024, height=500)
 frame_buttons = Frame(canvas_buttons, bg="#2F2F2F")
 canvas_buttons.create_window((0, 0), window=frame_buttons, anchor="nw")
 
@@ -74,11 +76,14 @@ def start_drag(event):
     dragging = True
     last_y_position = event.y
 
+SMOOTHING_FACTOR = 0.9
+
 def on_touch_drag(event):
     global dragging, last_y_position, y_movement
     if dragging:
-        y_movement += event.y - last_y_position
-        if abs(y_movement) > 5:  # Only move when y_movement is larger than 5 pixels
+        delta_y = event.y - last_y_position
+        y_movement = SMOOTHING_FACTOR * delta_y + (1 - SMOOTHING_FACTOR) * y_movement  # Adjusted calculation of y_movement
+        if abs(y_movement) > 1:
             frame_buttons.place(x=canvas_buttons.winfo_width() // 2, y=(frame_buttons.winfo_y() + y_movement), anchor="n")
             y_movement = 0
         last_y_position = event.y

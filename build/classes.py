@@ -1,6 +1,8 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
+import globals
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\classes")
 
@@ -52,7 +54,7 @@ class_buttons = [[None] * 4 for _ in range(4)]
 
 for i in range(4):
     for j in range(4):
-        class_buttons_.append(Button(image=button_image, borderwidth=0, highlightthickness=0, command=lambda i=i, j=j: smartTimeTable.timetable_data.set(f"button_{i*4+j+1}"), relief="flat"))
+        class_buttons_.append(Button(image=button_image, borderwidth=0, highlightthickness=0, command=lambda i=i, j=j: globals.timetable_data.set(f"button_{i*4+j+1}"), relief="flat"))
         class_buttons[i][j] = class_buttons_[-1]
         class_buttons[i][j].place(x=144.0 + j * 195, y=117.0 + i * 100, width=150.0, height=65.0)
 

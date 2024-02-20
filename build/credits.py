@@ -4,6 +4,8 @@ import sys
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from PIL import Image,ImageTk
 
+import globals
+
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")
@@ -145,10 +147,10 @@ button_2 = Button(
     relief="flat"
 )
 button_2.place(
-    x=505.0,
-    y=530.0,
-    width=115.0,
-    height=115.0
+    x=452.0,
+    y=485.0,
+    width=90.0,
+    height=90.0
 )
 
 window.resizable(False, False)

@@ -4,22 +4,22 @@ from subprocess import Popen
 import sys
 import time
 from time import strftime
-
 from tkinter import Tk, Canvas, Button, PhotoImage, Label
 import datetime
+import json
+
+import globals
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\timetable")
 
+with open(OUTPUT_PATH / "config.json", 'r', encoding='utf-8') as f:
+    config = json.load(f)
+
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
-
-global timetable_name  # The name of the timetable as a text
-global timetable_type  # The type of the timetable (e.g. "Class", "Teacher", "Room")
-global timetable_data  # The data of the timetable (e.g. "1.S", "Novák Jan", "46")
-global timetable_time_period    # The time period of the timetable (e.g. "Actual", "Next week", "Previous week")
 
 
 window = Tk()
@@ -150,15 +150,12 @@ for i in range(11):
 
 
 
-timetable_name_text = canvas.create_text(17, 10, anchor="nw", text="", fill="#D3D3D3", font=("Inter", 50 * -1))
+timetable_name_text = canvas.create_text(80, 10, anchor="nw", text="", fill="#D3D3D3", font=("Inter", 50 * -1))
 
 def change_timetable_name(new_text):
     global timetable_name
     timetable_name = new_text
     canvas.itemconfigure(timetable_name_text, text=new_text)
-
-
-
 
 
 
@@ -178,7 +175,19 @@ time()
 
 
 
-# Create the dates matrix
+def change_timetable_time_period():
+    if globals.timetable_time_period == "Actual":
+        globals.timetable_time_period = "Next"
+        timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+    elif globals.timetable_time_period == "Next":
+        globals.timetable_time_period = "Stable"
+        timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+    elif globals.timetable_time_period == "Stable":
+        globals.timetable_time_period = "Actual"
+        timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+
+
+# Create the dates matrixa
 dates = [[None] * 5 for _ in range(1)]
 
 start_date = datetime.date.today()
@@ -275,8 +284,10 @@ button_5 = Button(
     image=button_image_5,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_5 clicked"),
-    relief="flat"
+    command=lambda: change_timetable_time_period(),
+    relief="flat",
+    activeforeground='#000000',
+    activebackground="#D9D9D9"
 )
 button_5.place(
     x=43.0,
@@ -285,6 +296,13 @@ button_5.place(
     height=45.0
 )
 
+timetable_time_period_label = Label(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+timetable_time_period_label.place(
+    x=43.0 + 75.0,
+    y=540.0 + 22.5,
+    anchor="center"
+)
+timetable_time_period_label.bind("<Button-1>", lambda e: button_5.invoke())
 
 
 button_image_6 = PhotoImage(
@@ -316,5 +334,5 @@ for row in dates:
             canvas.tag_raise(date)
 
 
-change_timetable_name("IT Laboratoř 46")
+change_timetable_name(config["timetableName"])
 window.mainloop()
