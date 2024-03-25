@@ -8,8 +8,6 @@ from tkinter import Tk, Canvas, Button, PhotoImage, Label
 import datetime
 import json
 
-import globals
-
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\timetable")
@@ -120,10 +118,6 @@ image_3 = canvas.create_image(
 
 
 
-
-
-
-# Create the timetable texts
 main_ = []
 top_ = []
 bottom_ = []
@@ -132,22 +126,93 @@ main_texts = [[None] * 5 for _ in range(11)]
 bottom_texts = [[None] * 5 for _ in range(11)]
 top_texts = [[None] * 5 for _ in range(11)]
 
-for i in range(11):
+position_offset = 901
+
+
+def generate_timetable():
+    # Destroy the previous timetable
+    destroy_timetable()
+
+    # Define the mapping from timetable_type to folder name
+    type_to_folder = {"teacher": "teachers", "class": "classes", "room": "rooms"}
+
+    # Load the data from the JSON file
+    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    # Construct the file path
+    timetable_type = data['timetable_type'].lower()
+    timetable_data = data['timetable_data']
+    timetable_period = data['timetable_time_period'].lower()
+
+    file_path = f"build\\timetableData\\{type_to_folder[timetable_type]}\\{timetable_data}\\{timetable_period}.json"
+    print(file_path)
+
+    # Load the JSON file
+    with open(file_path, 'r', encoding='utf-8') as file:
+        timetable_data = json.load(file)
+
+    # Define the mapping from timetable_type to text fields
+    type_to_text_fields = {
+        "teacher": {"main": "subject", "top": "room", "bottom": "group"},
+        "class": {"main": "subject", "top": "room", "bottom": "teacher"},
+        "room": {"main": "subject", "top": "teacher", "bottom": "group"},
+    }
+
+    text_fields = type_to_text_fields[timetable_type]
+
+    # Get the current position of the timetable
+    current_position = canvas.coords(image_1)[0]
+
+    # Use the data from the JSON file to create the timetable
     for j in range(5):
-        main_.append(canvas.create_text(116 + i * 150, 190 + j * 75, anchor="center", text="XXc", fill="#D3D3D3", font=("Inter Light", 30 * -1)))
-        main_texts[i][j] = main_[-1]
+        for i in range(11):
+            lesson = timetable_data.get(str(j*11 + i), [{}])[0]  # Get the lesson
+            main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
+            bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
+            top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
+            print(current_position)
+            main_.append(canvas.create_text(current_position - position_offset + 120 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", 30 * -1)))
+            main_texts[i][j] = main_[-1]
+            if len(bottom_text) <= 4:
+                bottom_size = 20
+            else:
+                bottom_size = 17
+            bottom_.append(canvas.create_text(current_position - position_offset + 183 + i * 150, 200 + j * 75, anchor="center", text=bottom_text, fill="#D3D3D3", font=("Inter", bottom_size * -1)))
+            bottom_texts[i][j] = bottom_[-1]
+            top_.append(canvas.create_text(current_position - position_offset + 183 + i * 150, 175 + j * 75, anchor="center", text=top_text, fill="#D3D3D3", font=("Inter Light", 20 * -1)))
+            top_texts[i][j] = top_[-1]
 
-for i in range(11):
-    for j in range(5):
-        bottom_.append(canvas.create_text(183 + i * 150, 197 + j * 75, anchor="center", text="Xx", fill="#D3D3D3", font=("Inter Light", 23 * -1)))
-        bottom_texts[i][j] = bottom_[-1]
+    canvas.tag_raise(image_2)
+    canvas.tag_raise(image_3)
+    # Raise all dates
+    for row in dates:
+        for date in row:
+            if date is not None:
+                canvas.tag_raise(date)
 
-for i in range(11):
-    for j in range(5):
-        top_.append(canvas.create_text(183 + i * 150, 172 + j * 75, anchor="center", text="0.XX P0", fill="#D3D3D3", font=("Inter Light", 18 * -1)))
-        top_texts[i][j] = top_[-1]
+    #set the regenarate timetable variable in globals.json to false
+    data['regenerate_timetable'] = False
+    with open('build\\globals.json', 'w') as f:
+        json.dump(data, f)
 
 
+
+
+
+def destroy_timetable():
+    for row in main_texts:
+        for text in row:
+            if text is not None:
+                canvas.delete(text)
+    for row in bottom_texts:
+        for text in row:
+            if text is not None:
+                canvas.delete(text)
+    for row in top_texts:
+        for text in row:
+            if text is not None:
+                canvas.delete(text)
 
 
 timetable_name_text = canvas.create_text(80, 10, anchor="nw", text="", fill="#D3D3D3", font=("Inter", 50 * -1))
@@ -175,26 +240,60 @@ time()
 
 
 
-def change_timetable_time_period():
-    if globals.timetable_time_period == "Actual":
-        globals.timetable_time_period = "Next"
-        timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
-    elif globals.timetable_time_period == "Next":
-        globals.timetable_time_period = "Stable"
-        timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
-    elif globals.timetable_time_period == "Stable":
-        globals.timetable_time_period = "Actual"
-        timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+import json
 
-
-# Create the dates matrixa
+# Create the dates matrix
 dates = [[None] * 5 for _ in range(1)]
 
-start_date = datetime.date.today()
-for j in range(5):
-    date = start_date + datetime.timedelta(days=j)
-    dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
+def change_timetable_time_period():
+    # Load the data from the JSON file
+    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
 
+    # Update the values
+    if data['timetable_time_period'] == "Actual":
+        data['timetable_time_period'] = "Next"
+        timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+        destroy_dates()
+        start_date = datetime.date.today()
+        # Calculate the offset to the next Monday
+        offset = (7 - start_date.weekday()) % 7
+        for j in range(5):
+            date = start_date + datetime.timedelta(days=j + offset)
+            dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
+
+    elif data['timetable_time_period'] == "Next":
+        data['timetable_time_period'] = "Permanent"
+        timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+        destroy_dates()
+
+    elif data['timetable_time_period'] == "Permanent":
+        data['timetable_time_period'] = "Actual"
+        timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+        destroy_dates()
+        start_date = datetime.date.today()
+        # Calculate the offset to this week's Monday
+        offset = ((7 - start_date.weekday()) % 7) - 7
+        for j in range(5):
+            date = start_date + datetime.timedelta(days=j + offset)
+            dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
+
+    data['regenerate_timetable'] = True
+
+    # Write the data back to the JSON file
+    with open('build\\globals.json', 'w', encoding= 'utf-8') as f:
+        json.dump(data, f)
+
+
+
+
+def destroy_dates():
+    # delete the dates if they exist
+    for j in range(5):
+        if dates[0][j] is not None:
+            canvas.delete(dates[0][j])
+            dates[0][j] = None
+            window.update()
 
 
 
@@ -323,6 +422,35 @@ button_6.place(
 
 window.resizable(False, False)
 
+# Set the timetable time period to Actual by writing permanent to the globals.json file an then calling the change_timetable_time_period function
+with open('build\\globals.json', 'r') as f:
+    data = json.load(f)
+    data['timetable_time_period'] = "Permanent"
+    with open('build\\globals.json', 'w') as f:
+        json.dump(data, f)
+change_timetable_time_period()
+
+generate_timetable()
+
+def check_and_regenerate():
+    with open('build\\globals.json', 'r') as f:
+        data = json.load(f)
+        #print(data)
+        #print(data['regenerate_timetable'])
+    if data['regenerate_timetable'] == True:
+        # Your code here
+        print("Regenerating")
+        generate_timetable()
+        # refresh the window
+        window.update()
+
+    window.after(250, check_and_regenerate)
+
+# Start checking
+check_and_regenerate()
+
+
+change_timetable_name(config["timetableName"])
 
 canvas.tag_raise(image_2)
 canvas.tag_raise(image_3)
@@ -333,6 +461,4 @@ for row in dates:
         if date is not None:
             canvas.tag_raise(date)
 
-
-change_timetable_name(config["timetableName"])
 window.mainloop()

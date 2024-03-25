@@ -4,8 +4,6 @@ import sys
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from PIL import Image,ImageTk
 
-import globals
-
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")

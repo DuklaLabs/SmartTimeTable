@@ -1,7 +1,7 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
-import globals
+import json
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\classes")
@@ -48,17 +48,45 @@ button_1.place(
     height=60.0
 )
 
+import json
+
+def update_globals(class_name):
+    # Load the data from the JSON file
+    with open('build\\globals.json', 'r') as f:
+        data = json.load(f)
+
+    # Update the values
+    data['timetable_data'] = class_name
+    data['timetable_type'] = 'Class'
+    data['regenerate_timetable'] = True
+
+    # Write the data back to the JSON file
+    with open('build\\globals.json', 'w') as f:
+        json.dump(data, f)
+    window.destroy()
+
+# Load class data from JSON file
+with open('build\\timetableData\\classes.json', 'r', encoding='utf-8') as f:
+    class_data = json.load(f)
+
 button_image = PhotoImage(file=relative_to_assets("ClassButton.png"))
 class_buttons_ = []
-class_buttons = [[None] * 4 for _ in range(4)]
 
-for i in range(4):
-    for j in range(4):
-        class_buttons_.append(Button(image=button_image, borderwidth=0, highlightthickness=0, command=lambda i=i, j=j: globals.timetable_data.set(f"button_{i*4+j+1}"), relief="flat"))
-        class_buttons[i][j] = class_buttons_[-1]
-        class_buttons[i][j].place(x=144.0 + j * 195, y=117.0 + i * 100, width=150.0, height=65.0)
+# Extract class names
+class_names = [list(class_dict.keys())[0] for class_dict in class_data['classes']]
 
+# Set the number of rows and columns for the buttons
+num_rows = 4
+num_cols = 4
 
+# Initialize the class_buttons list
+class_buttons = [[None] * num_cols for _ in range(num_rows)]
+
+# Iterate over class names
+for i, class_name in enumerate(class_names):
+    class_buttons_.append(Button(image=button_image, text=class_name, font=("Kanit Light", 23), compound='center', borderwidth=0, highlightthickness=0, command=lambda class_name=class_name: update_globals(class_name), relief="flat"))
+    class_buttons[i // num_cols][i % num_cols] = class_buttons_[-1]
+    class_buttons[i // num_cols][i % num_cols].place(x=144.0 + (i % num_cols) * 195, y=117.0 + (i // num_cols) * 100, width=150.0, height=65.0)
 
 canvas.create_text(
     512.0,

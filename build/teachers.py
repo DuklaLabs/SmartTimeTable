@@ -1,7 +1,6 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Scrollbar, VERTICAL, Frame
-
-import globals
+import json
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\teachers")
@@ -31,10 +30,7 @@ canvas = Canvas(
 )
 canvas.place(x=0, y=0)
 
-canvas_buttons = Canvas(window, bg="#2F2F2F", highlightthickness=0)
-canvas_buttons.place(x=0, y=100, width=1024, height=500)
-frame_buttons = Frame(canvas_buttons, bg="#2F2F2F")
-canvas_buttons.create_window((0, 0), window=frame_buttons, anchor="nw")
+
 
 
 button_image_1 = PhotoImage(
@@ -46,6 +42,7 @@ button_1 = Button(
     command=lambda: window.destroy(),
     relief="flat"
 )
+
 button_1.place(
     x=935.0,
     y=30.0,
@@ -53,75 +50,132 @@ button_1.place(
     height=60.0
 )
 
-teacher_buttons = []
-button_image = PhotoImage(file=relative_to_assets("TeacherButton.png"))
 
-for i in range(58):
-    button = Button(frame_buttons, image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
-                    text="Aaaaaaaa Bbbbbbbbb", font=("Kanit Light", 20), compound="center",
-                    command=lambda i=i: print(f"Button {i+1} clicked"), 
-                    activebackground="#2F2F2F", activeforeground="#2F2F2F",
-                    background="#2F2F2F", foreground="#2F2F2F")
-    button.pack(pady=9, anchor='center')
-
-frame_buttons.update()
-canvas_buttons.configure(scrollregion=canvas_buttons.bbox("all"))
 
 dragging = False
 last_y_position = 0
-y_movement = 0
 
 def start_drag(event):
     global dragging, last_y_position
     dragging = True
-    last_y_position = event.y
+    x, y = window.winfo_pointerxy()
+    last_y_position = canvas.canvasy(y)
+    print(event.y)
+    global drag_start_position
+    drag_start_position = event.y
 
-SMOOTHING_FACTOR = 0.9
-
-def on_touch_drag(event):
-    global dragging, last_y_position, y_movement
+def drag(event):
+    global dragging, last_y_position
     if dragging:
-        delta_y = event.y - last_y_position
-        y_movement = SMOOTHING_FACTOR * delta_y + (1 - SMOOTHING_FACTOR) * y_movement  # Adjusted calculation of y_movement
-        if abs(y_movement) > 1:
-            frame_buttons.place(x=canvas_buttons.winfo_width() // 2, y=(frame_buttons.winfo_y() + y_movement), anchor="n")
-            y_movement = 0
-        last_y_position = event.y
+        x, y = window.winfo_pointerxy()
+        y_movement = canvas.canvasy(y) - last_y_position
+        # Get the y position of the first button using the bbox method
+        current_position = canvas.bbox(teacher_buttons[0])[1]  # Extract only the Y coordinate
+        print(current_position)
+
+        if -3200 <= current_position + y_movement <= 200:
+            # Move the buttons
+            for button in teacher_buttons:
+                canvas.move(button, 0, y_movement)
+            last_y_position = canvas.canvasy(y)
+
+        if abs(drag_start_position - current_position) > 5:
+            # Disable the buttons
+            for button in teacher_buttons:
+                canvas.itemconfig(button, state="disabled")
+                
+
 
 def stop_drag(event):
     global dragging
     dragging = False
 
-frame_buttons.bind("<Button-1>", start_drag)
-frame_buttons.bind("<B1-Motion>", on_touch_drag)
-frame_buttons.bind("<ButtonRelease-1>", stop_drag)
+    # Enable the buttons
+    for button in teacher_buttons:
+        canvas.itemconfig(button, state="normal")
 
-def bind_drag_events(widget):
-    widget.bind("<Button-1>", start_drag)
-    widget.bind("<B1-Motion>", on_touch_drag)
-    widget.bind("<ButtonRelease-1>", stop_drag)
-
-# Bind drag events to all buttons in frame_buttons
-for button in frame_buttons.winfo_children():
-    bind_drag_events(button)
-
-canvas_buttons.create_window((canvas_buttons.winfo_width() // 2, 0), window=frame_buttons, anchor="n")
-
-canvas_buttons.create_window((canvas_buttons.winfo_width() // 2, 0), window=frame_buttons, anchor="n")
+canvas.bind("<Button-1>", start_drag)
+canvas.bind("<B1-Motion>", drag)
+canvas.bind("<ButtonRelease-1>", stop_drag)
 
 
 
-text = canvas.create_text(
-    512.0,
-    45.0,
-    anchor="center",
-    text="Učitelé",
-    fill="#D24B49",
-    font=("Kanit Regular", 50 * -1)
+
+def update_globals(teacher_name):
+    # Load the data from the JSON file
+    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    # Update the values
+    data['timetable_data'] = teacher_name
+    data['timetable_type'] = 'Teacher'
+    data['regenerate_timetable'] = True
+
+    # Write the data back to the JSON file
+    with open('build\\globals.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+    print(data)
+    print(data['regenerate_timetable'])
+    window.destroy()
+
+
+
+
+# Load teacher data from JSON file
+with open('build\\timetableData\\teachers.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+teacher_buttons = []
+teacher_buuton_ids = []
+button_image = PhotoImage(file=relative_to_assets("TeacherButton.png"))
+
+# Iterate over teacher data
+for teacher in data['teachers']:
+    # Get teacher name
+    teacher_name = list(teacher.keys())[0]
+
+    # Create button for teacher
+    button = Button(image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
+                    text=teacher_name, font=("Kanit Light", 20), compound="center",
+                    command=lambda teacher_name=teacher_name: update_globals(teacher_name),
+                    activebackground="#2F2F2F", activeforeground="#2F2F2F",
+                    background="#2F2F2F", foreground="#2F2F2F")
+
+    # Bind the drag events to the button
+    button.bind("<Button-1>", start_drag)
+    button.bind("<B1-Motion>", drag)
+    button.bind("<ButtonRelease-1>", stop_drag)
+
+    # Add the button to the canvas and get its ID
+    button_id = canvas.create_window(512.0, 130.0 + 65 * len(teacher_buttons), window=button)
+
+
+    # Add button ID to list
+    teacher_buttons.append(button_id)
+
+
+
+
+
+
+
+
+
+# Create a separate canvas for the text and rectangle
+text_canvas = Canvas(
+    window,
+    bg="#2F2F2F",
+    height=80,
+    width=800,
+    bd=0,
+    highlightthickness=0,
+    relief="ridge"
 )
+text_canvas.place(x=0, y=0)
 
-# Place a rectangle behind the text with the same color as the canvas
-rect = canvas.create_rectangle(
+# Create the rectangle and text on the separate canvas
+rect = text_canvas.create_rectangle(
     312.0,
     110.0,
     712.0,
@@ -130,9 +184,14 @@ rect = canvas.create_rectangle(
     outline=""
 )
 
-# Place the rectangle in front of everything then do the same for the text
-canvas.tag_raise("rect")
-canvas.tag_raise("text")
+text = text_canvas.create_text(
+    512.0,
+    45.0,
+    anchor="center",
+    text="Učitelé",
+    fill="#D24B49",
+    font=("Kanit Regular", 50 * -1)
+)
 
 window.resizable(False, False)
 window.mainloop()
