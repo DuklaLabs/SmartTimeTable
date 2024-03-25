@@ -54,45 +54,45 @@ button_1.place(
 
 dragging = False
 last_y_position = 0
+buttons_enabled = True
 
 def start_drag(event):
-    global dragging, last_y_position
+    global dragging, last_y_position, buttons_enabled
     dragging = True
     x, y = window.winfo_pointerxy()
     last_y_position = canvas.canvasy(y)
-    print(event.y)
     global drag_start_position
     drag_start_position = event.y
 
 def drag(event):
-    global dragging, last_y_position
+    global last_y_position, dragging, buttons_enabled
     if dragging:
         x, y = window.winfo_pointerxy()
         y_movement = canvas.canvasy(y) - last_y_position
         # Get the y position of the first button using the bbox method
         current_position = canvas.bbox(teacher_buttons[0])[1]  # Extract only the Y coordinate
-        print(current_position)
 
-        if -3200 <= current_position + y_movement <= 200:
+        if -3200 <= current_position + y_movement <= 120:
             # Move the buttons
             for button in teacher_buttons:
                 canvas.move(button, 0, y_movement)
             last_y_position = canvas.canvasy(y)
 
-        if abs(drag_start_position - current_position) > 5:
+        if abs(drag_start_position - current_position) > 20:
             # Disable the buttons
-            for button in teacher_buttons:
-                canvas.itemconfig(button, state="disabled")
-                
+            buttons_enabled = False
 
 
 def stop_drag(event):
-    global dragging
+    global dragging, buttons_enabled
     dragging = False
 
-    # Enable the buttons
-    for button in teacher_buttons:
-        canvas.itemconfig(button, state="normal")
+    # Enable the buttons after 200ms by setting the buttons_enabled variable to True
+    window.after(200, lambda: enable_buttons())
+
+def enable_buttons():
+    global buttons_enabled
+    buttons_enabled = True
 
 canvas.bind("<Button-1>", start_drag)
 canvas.bind("<B1-Motion>", drag)
@@ -102,23 +102,26 @@ canvas.bind("<ButtonRelease-1>", stop_drag)
 
 
 def update_globals(teacher_name):
-    # Load the data from the JSON file
-    with open('build\\globals.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    global buttons_enabled
+    print(buttons_enabled)
+    if buttons_enabled:
 
-    # Update the values
-    data['timetable_data'] = teacher_name
-    data['timetable_type'] = 'Teacher'
-    data['regenerate_timetable'] = True
+        # Load the data from the JSON file
+        with open('build\\globals.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
 
-    # Write the data back to the JSON file
-    with open('build\\globals.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f)
+        # Update the values
+        data['timetable_data'] = teacher_name
+        data['timetable_type'] = 'Teacher'
+        data['regenerate_timetable'] = True
 
-    print(data)
-    print(data['regenerate_timetable'])
-    window.destroy()
+        # Write the data back to the JSON file
+        with open('build\\globals.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f)
 
+        print(data)
+        print(data['regenerate_timetable'])
+        window.destroy()
 
 
 
@@ -192,6 +195,13 @@ text = text_canvas.create_text(
     fill="#D24B49",
     font=("Kanit Regular", 50 * -1)
 )
+
+
+# Bind the drag events to the window instead of the canvas
+window.bind("<Button-1>", start_drag)
+window.bind("<B1-Motion>", drag)
+window.bind("<ButtonRelease-1>", stop_drag)
+
 
 window.resizable(False, False)
 window.mainloop()
