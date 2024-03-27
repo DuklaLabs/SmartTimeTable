@@ -7,10 +7,12 @@ from time import strftime
 from tkinter import Tk, Canvas, Button, PhotoImage, Label
 import datetime
 import json
+import asyncio
+from PIL import Image, ImageTk
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\timetable")
+ASSETS_PATH = OUTPUT_PATH / Path("assets\\timetable")
 
 with open(OUTPUT_PATH / "config.json", 'r', encoding='utf-8') as f:
     config = json.load(f)
@@ -171,7 +173,6 @@ def generate_timetable():
             main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
             bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
             top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
-            print(current_position)
             main_.append(canvas.create_text(current_position - position_offset + 120 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", 30 * -1)))
             main_texts[i][j] = main_[-1]
             if len(bottom_text) <= 4:
@@ -226,17 +227,17 @@ def change_timetable_name(new_text):
 
 
 #Create the clock
-def time():
+def clock():
     #Get the current time and date and format it to 12:00   31.12.2024
     string = strftime('%H:%M   %d.%m.%Y')
     lbl.configure(text=string)
-    lbl.after(1000, time)
+    lbl.after(1000, clock)
 
 
 lbl = Label(window, font=('Inter', 28), background = '#303030', foreground = '#B6B6B6')
 
 lbl.place(x=770, y=40, anchor="center")
-time()
+clock()
 
 
 
@@ -295,6 +296,87 @@ def destroy_dates():
             dates[0][j] = None
             window.update()
 
+
+
+def rotate_image(image, angle):
+    rotated_image = image.rotate(angle)
+    return ImageTk.PhotoImage(rotated_image)
+
+def update_image():
+    global angle, photo_image, canvas, loading
+    angle = (angle - 3) % 360  # Update the angle
+    photo_image = rotate_image(image, angle)  # Rotate the image
+    canvas.itemconfig(loading, image=photo_image)  # Update the image on the canvas
+    window.after(10, update_image)  # Call this function again after 100 ms
+
+
+image = Image.open(relative_to_assets("Loading.png"))
+photo_image = ImageTk.PhotoImage(image)
+loading = canvas.create_image(512, 300, image=photo_image)
+angle = 0
+# Hide the loading image
+canvas.itemconfig(loading, state="hidden")
+
+
+
+
+def fetch_data():
+    # Load the data from the JSON file
+    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    data['fetch_data'] = True
+
+    # Write the data back to the JSON file
+    with open('build\\globals.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
+    global image, photo_image, canvas, loading, angle
+
+    # Load the image using PIL
+    image = Image.open(relative_to_assets("Loading.png"))
+
+    # Resize the image to 30% of its original size
+    width, height = image.size
+    image = image.resize((int(width * 0.4), int(height * 0.4)))
+
+    # Flip the image vertically
+    image = image.transpose(Image.FLIP_TOP_BOTTOM)
+
+    # Create a PhotoImage object from the PIL image
+    photo_image = ImageTk.PhotoImage(image)
+
+    # Add the image to the canvas
+    loading = canvas.create_image(512, 300, image=photo_image)
+
+    # Place the loading image on top of everything else
+    canvas.tag_raise(loading)
+
+    # Initialize the angle
+    angle = 0
+
+    # Start the rotation
+    update_image()
+
+    # Start the getTimeTableData.py script
+    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
+
+    # Wait until the fetch_data is set to False
+    check_fetch_data()
+
+def check_fetch_data():
+    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    if data['fetch_data']:
+        # If fetch_data is still True, check again after 1 second
+        window.after(1000, check_fetch_data)
+    else:
+        # If fetch_data is False, hide the loading image and regenerate the timetable
+        canvas.itemconfig(loading, state="hidden")
+        generate_timetable()
+    
 
 
 button_image_1 = PhotoImage(
@@ -410,7 +492,7 @@ button_6 = Button(
     image=button_image_6,
     borderwidth=0,
     highlightthickness=0,
-    command = lambda: window.destroy(),
+    command = lambda: fetch_data(),
     relief="flat"
 )
 button_6.place(

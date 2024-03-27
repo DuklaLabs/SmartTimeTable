@@ -4,8 +4,6 @@ import sys
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from PIL import Image,ImageTk
 
-import globals
-
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")
@@ -78,52 +76,10 @@ canvas.create_text(512, 320, anchor="center", text="S použitím knihovny TKinte
 
 canvas.create_text(512, 400, anchor="center", text="Pro více info se obraťte na DuklaLabs CEO – Jan Petrášek", fill="#FFFFFF", font=("Kanit", 28 * -1))
 
-#if the DuklaLabs logo get clicked three time in 10 seconds, change the "Figma" text to "Ligma"
-def change_figma_text(new_text):
-    canvas.itemconfigure(figma_text, text=new_text)
 
 
 
 
-
-button_image_5 = PhotoImage(
-    file=relative_to_assets("Video.png"))
-button_5 = Button(
-    image=button_image_5,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "playVideo.py")]),
-    relief="flat"
-)
-button_5.place(
-    x=923,
-    y=180,
-    width=70.0,
-    height=70.0
-)
-
-
-
-
-
-
-image_image_1 = PhotoImage(
-    file=relative_to_assets("SchoolLogo.png"))
-image_1 = canvas.create_image(
-    231.0,
-    530.0,
-    image=image_image_1
-)
-
-image_image_2 = PhotoImage(
-    file=relative_to_assets("GithubQRCode.png"))
-image_2 = canvas.create_image(
-    939,
-    514.0,
-    image=image_image_2
-)
-
-click_count = 0
 
 def increase_click_count():
     window.after(3000, reset_click_count)

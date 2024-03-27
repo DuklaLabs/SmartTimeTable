@@ -264,6 +264,12 @@ def get_OBJ(link):
                                         "Next" : link['href'].replace('Actual','Next').replace('/bakaweb/timetable/public/','')}}
     return result
 
+
+
+
+
+
+
 # Nastavte název souboru, kam chcete uložit odpověď
 nazev_souboru = 'odpoved.html'
 
@@ -303,6 +309,20 @@ print (f"Total runs: {runs}")
 print (f"Total Executions: {runs/3}")
 print (f"Total Execution time per run: {network_time/runs + processing_time/runs}") 
 print (f"Total Execution time: {network_time + processing_time}")
+
+
+
+
+# Nastavení globální proměnné fetch_data na False po 5 sekundách
+with open('build\\globals.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+if data['fetch_data']:
+    time.sleep(5)
+    data['fetch_data'] = False
+    
+with open('build\\globals.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f)
     
     
     

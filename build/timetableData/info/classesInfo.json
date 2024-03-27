@@ -1,0 +1,84 @@
+{
+    "classes": [
+        {
+            "1.EE": {
+                "Info": "Informace o třídě 1.EE"
+            }
+        },
+        {
+            "1.EM": {
+                "Info": "Informace o třídě 1.EM"
+            }
+        },
+        {
+            "1.ER": {
+                "Info": "Informace o třídě 1.ER"
+            }
+        },
+        {
+            "1.S": {
+                "Info": "Informace o třídě 1.S"
+            }
+        },
+        {
+            "2.EE": {
+                "Info": "Informace o třídě 2.EE"
+            }
+        },
+        {
+            "2.EM": {
+                "Info": "Informace o třídě 2.EM"
+            }
+        },
+        {
+            "2.ER": {
+                "Info": "Informace o třídě 2.ER"
+            }
+        },
+        {
+            "2.S": {
+                "Info": "Informace o třídě 2.S"
+            }
+        },
+        {
+            "3.EA": {
+                "Info": "Informace o třídě 3.EA"
+            }
+        },
+        {
+            "3.EB": {
+                "Info": "Informace o třídě 3.EB"
+            }
+        },
+        {
+            "3.SA": {
+                "Info": "Informace o třídě 3.SA"
+            }
+        },
+        {
+            "3.SB": {
+                "Info": "Informace o třídě 3.SB"
+            }
+        },
+        {
+            "4.EA": {
+                "Info": "Informace o třídě 4.EA"
+            }
+        },
+        {
+            "4.EB": {
+                "Info": "Informace o třídě 4.EB"
+            }
+        },
+        {
+            "4.SA": {
+                "Info": "Informace o třídě 4.SA"
+            }
+        },
+        {
+            "4.SB": {
+                "Info": "Informace o třídě 4.SB"
+            }
+        }
+    ]
+}
