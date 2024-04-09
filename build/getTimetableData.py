@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 import json
 from pathlib import Path
 import time
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 timetableData_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'timetableData')
 Path(timetableData_dir).mkdir(parents=True, exist_ok=True)
@@ -87,6 +90,7 @@ def get_hours_time(soup, parametr):
 def get_lessons(soup):
          
     days = soup.find_all('div', class_="bk-cell-wrapper")
+    skip = False
     for day in days:
         hours = soup.find_all('div', class_="bk-timetable-cell")
         day_json = json.loads('{}')
@@ -123,10 +127,22 @@ def get_lessons(soup):
             if check:
                 for cell in check:
                     sp.append(get_data(cell, nmbr))
+            
+            check = None
+            check = hour.find_all('div', class_="day-item-volno border-levy border-horni border-pravy")
+            if check:
+                for cell in check:
+                    skip = True
+
             if sp:
-                day_json[str(nmbr)] = sp
- #
-            nmbr += 1
+                day_json[str(nmbr)] = sp        
+
+        
+            if skip:
+                skip = False
+                nmbr += 11
+            else:
+                nmbr += 1
             
     return day_json
 def check_cell(hour, class_):
@@ -231,7 +247,7 @@ def get_timeTables(url, Json_file):
         global runs
         runs += 3
         
-       
+        
             
 def get_table(typ, url, file):
     
@@ -277,6 +293,13 @@ nazev_souboru = 'odpoved.html'
 url_s_parametrem = "https://bakalari.spssecb.cz/bakaweb/Timetable/Public/"
 slozka_scriptu = os.path.dirname(os.path.abspath(__file__))
 cesta_k_souboru = os.path.join(slozka_scriptu, 'timetableData', nazev_souboru)
+
+# Kontrola zda je url validní a dostupná
+response = requests.get(url_s_parametrem)
+response.raise_for_status()
+
+
+
 
 get_links(url_s_parametrem, cesta_k_souboru)
 

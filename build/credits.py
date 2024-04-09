@@ -76,6 +76,8 @@ canvas.create_text(512, 320, anchor="center", text="S použitím knihovny TKinte
 
 canvas.create_text(512, 400, anchor="center", text="Pro více info se obraťte na DuklaLabs CEO – Jan Petrášek", fill="#FFFFFF", font=("Kanit", 28 * -1))
 
+canvas.create_text(512, 450, anchor="center", text="WORK IN PROGRESS", fill="#FF0000", font=("Kanit", 28 * -1))
+
 #if the DuklaLabs logo get clicked three time in 10 seconds, change the "Figma" text to "Ligma"
 def change_figma_text(new_text):
     canvas.itemconfigure(figma_text, text=new_text)

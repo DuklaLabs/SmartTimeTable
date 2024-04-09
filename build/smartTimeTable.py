@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 from pathlib import Path
 from subprocess import Popen
@@ -12,9 +14,9 @@ from PIL import Image, ImageTk
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets\\timetable")
+ASSETS_PATH = OUTPUT_PATH / "assets" / "timetable"
 
-with open(OUTPUT_PATH / "config.json", 'r', encoding='utf-8') as f:
+with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
 
@@ -57,6 +59,8 @@ last_x_position = 0
 
 
 def start_drag(event):
+    global timetable_inactivity
+    timetable_inactivity = 0
     global dragging, last_x_position
     overlapping = canvas.find_overlapping(event.x - 1, event.y - 1, event.x + 1, event.y + 1)
     if image_1 in overlapping:
@@ -129,29 +133,32 @@ bottom_texts = [[None] * 5 for _ in range(11)]
 top_texts = [[None] * 5 for _ in range(11)]
 
 position_offset = 901
-
+timetable_inactivity = 0
 
 def generate_timetable():
     # Destroy the previous timetable
     destroy_timetable()
 
+    # Update the timetable name
+    update_timetable_name()
+
     # Define the mapping from timetable_type to folder name
     type_to_folder = {"teacher": "teachers", "class": "classes", "room": "rooms"}
 
     # Load the data from the JSON file
-    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Construct the file path
-    timetable_type = data['timetable_type'].lower()
-    timetable_data = data['timetable_data']
-    timetable_period = data['timetable_time_period'].lower()
+    timetable_type = data["timetable_type"].lower()
+    timetable_data = data["timetable_data"]
+    timetable_period = data["timetable_time_period"].lower()
 
-    file_path = f"build\\timetableData\\{type_to_folder[timetable_type]}\\{timetable_data}\\{timetable_period}.json"
+    file_path = OUTPUT_PATH / "timetableData" / type_to_folder[timetable_type] / timetable_data / f"{timetable_period}.json"
     print(file_path)
 
     # Load the JSON file
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         timetable_data = json.load(file)
 
     # Define the mapping from timetable_type to text fields
@@ -169,20 +176,30 @@ def generate_timetable():
     # Use the data from the JSON file to create the timetable
     for j in range(5):
         for i in range(11):
-            lesson = timetable_data.get(str(j*11 + i), [{}])[0]  # Get the lesson
-            main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
-            bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
-            top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
-            main_.append(canvas.create_text(current_position - position_offset + 120 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", 30 * -1)))
-            main_texts[i][j] = main_[-1]
-            if len(bottom_text) <= 4:
-                bottom_size = 20
-            else:
-                bottom_size = 17
-            bottom_.append(canvas.create_text(current_position - position_offset + 183 + i * 150, 200 + j * 75, anchor="center", text=bottom_text, fill="#D3D3D3", font=("Inter", bottom_size * -1)))
-            bottom_texts[i][j] = bottom_[-1]
-            top_.append(canvas.create_text(current_position - position_offset + 183 + i * 150, 175 + j * 75, anchor="center", text=top_text, fill="#D3D3D3", font=("Inter Light", 20 * -1)))
-            top_texts[i][j] = top_[-1]
+            try:
+                lesson = timetable_data.get(str(j*11 + i), [{}])[0]  # Get the lesson
+                # If the lesson is empty, skip it
+                if lesson == "":
+                    continue
+                main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
+                bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
+                top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
+                if len(main_text) <= 5:
+                    main_size = 28
+                else:
+                    main_size = 24
+                main_.append(canvas.create_text(current_position - position_offset + 116 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", main_size * -1)))
+                main_texts[i][j] = main_[-1]
+                if len(bottom_text) <= 4:
+                    bottom_size = 20
+                else:
+                    bottom_size = 16
+                bottom_.append(canvas.create_text(current_position - position_offset + 185 + i * 150, 200 + j * 75, anchor="center", text=bottom_text, fill="#D3D3D3", font=("Inter", bottom_size * -1)))
+                bottom_texts[i][j] = bottom_[-1]
+                top_.append(canvas.create_text(current_position - position_offset + 185 + i * 150, 175 + j * 75, anchor="center", text=top_text, fill="#D3D3D3", font=("Inter Light", 20 * -1)))
+                top_texts[i][j] = top_[-1]
+            except Exception as e:
+                print(f"Error creating ¨lesson: {e}")
 
     canvas.tag_raise(image_2)
     canvas.tag_raise(image_3)
@@ -193,8 +210,8 @@ def generate_timetable():
                 canvas.tag_raise(date)
 
     #set the regenarate timetable variable in globals.json to false
-    data['regenerate_timetable'] = False
-    with open('build\\globals.json', 'w') as f:
+    data["regenerate_timetable"] = False
+    with open(OUTPUT_PATH / "globals.json", "w") as f:
         json.dump(data, f)
 
 
@@ -218,10 +235,40 @@ def destroy_timetable():
 
 timetable_name_text = canvas.create_text(80, 10, anchor="nw", text="", fill="#D3D3D3", font=("Inter", 50 * -1))
 
-def change_timetable_name(new_text):
-    global timetable_name
-    timetable_name = new_text
-    canvas.itemconfigure(timetable_name_text, text=new_text)
+
+def update_timetable_name():
+    # Load the currently selected timetable from the globals.json file
+    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+        timetable_type = data["timetable_type"].lower()
+        timetable_data = data["timetable_data"]
+
+    # Open the corresponding timetable info file depending on the timetable type
+    if timetable_type == "class":
+        with open(OUTPUT_PATH / "timetableData" / "info" / "classesInfo.json", "r", encoding="utf-8") as file:
+            timetable_info_list = json.load(file)["classes"]
+            timetable_info = next((class_info for class_info in timetable_info_list if timetable_data in class_info), None)
+
+    elif timetable_type == "teacher":
+        with open(OUTPUT_PATH / "timetableData" / "info" / "teachersInfo.json", "r", encoding="utf-8") as file:
+            timetable_info_list = json.load(file)["teachers"]
+            timetable_info = next((teacher_info for teacher_info in timetable_info_list if timetable_data in teacher_info), None)
+
+    elif timetable_type == "room":
+        with open(OUTPUT_PATH / "timetableData" / "info" / "roomsInfo.json", "r", encoding="utf-8") as file:
+            timetable_info_list = json.load(file)["rooms"]
+            timetable_info = next((room_info for room_info in timetable_info_list if timetable_data in room_info), None)
+
+    # Create the title by getting the name from the corresponding timetable info file
+    if timetable_info is not None:
+        timetable_name = timetable_info[timetable_data].get("name", "Default Name")
+    else:
+        timetable_name = "Unknown Timetable"
+
+    # Add 2 spaces in front of the name to move it to the right
+    timetable_name = "  " + timetable_name
+
+    canvas.itemconfigure(timetable_name_text, text=timetable_name)
 
 
 
@@ -229,12 +276,12 @@ def change_timetable_name(new_text):
 #Create the clock
 def clock():
     #Get the current time and date and format it to 12:00   31.12.2024
-    string = strftime('%H:%M   %d.%m.%Y')
+    string = strftime("%H:%M   %d.%m.%Y")
     lbl.configure(text=string)
     lbl.after(1000, clock)
 
 
-lbl = Label(window, font=('Inter', 28), background = '#303030', foreground = '#B6B6B6')
+lbl = Label(window, font=("Inter", 28), background = "#303030", foreground = "#B6B6B6")
 
 lbl.place(x=770, y=40, anchor="center")
 clock()
@@ -248,13 +295,13 @@ dates = [[None] * 5 for _ in range(1)]
 
 def change_timetable_time_period():
     # Load the data from the JSON file
-    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Update the values
-    if data['timetable_time_period'] == "Actual":
-        data['timetable_time_period'] = "Next"
-        timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+    if data["timetable_time_period"] == "Actual":
+        data["timetable_time_period"] = "Next"
+        timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
         start_date = datetime.date.today()
         # Calculate the offset to the next Monday
@@ -263,26 +310,26 @@ def change_timetable_time_period():
             date = start_date + datetime.timedelta(days=j + offset)
             dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
 
-    elif data['timetable_time_period'] == "Next":
-        data['timetable_time_period'] = "Permanent"
-        timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+    elif data["timetable_time_period"] == "Next":
+        data["timetable_time_period"] = "Permanent"
+        timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
 
-    elif data['timetable_time_period'] == "Permanent":
-        data['timetable_time_period'] = "Actual"
-        timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+    elif data["timetable_time_period"] == "Permanent":
+        data["timetable_time_period"] = "Actual"
+        timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
         start_date = datetime.date.today()
-        # Calculate the offset to this week's Monday
+        # Calculate the offset to this week"s Monday
         offset = ((7 - start_date.weekday()) % 7) - 7
         for j in range(5):
             date = start_date + datetime.timedelta(days=j + offset)
             dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
 
-    data['regenerate_timetable'] = True
+    data["regenerate_timetable"] = True
 
     # Write the data back to the JSON file
-    with open('build\\globals.json', 'w', encoding= 'utf-8') as f:
+    with open(OUTPUT_PATH / "globals.json", "w", encoding= "utf-8") as f:
         json.dump(data, f)
 
 
@@ -321,55 +368,65 @@ canvas.itemconfig(loading, state="hidden")
 
 
 def fetch_data():
-    # Load the data from the JSON file
-    with open('build\\globals.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
 
-    data['fetch_data'] = True
+    # Create a big "Mimo provoz!" text centered in the middle of the screen
+    global big_text
+    big_text = canvas.create_text(512, 300, anchor="center", text="Mimo provoz!", fill="#0000FF", font=("Inter", 100 * -1))
 
-    # Write the data back to the JSON file
-    with open('build\\globals.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f)
+    #    # Load the data from the JSON file
+    #    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
+    #        data = json.load(f)
+    #
+    #    data["fetch_data"] = True
+    #
+    #    # Write the data back to the JSON file
+    #    with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
+    #        json.dump(data, f)
+    #
+    #    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
+    #    global image, photo_image, canvas, loading, angle
+    #
+    #    # Load the image using PIL
+    #    image = Image.open(relative_to_assets("Loading.png"))
+    #
+    #    # Resize the image to 30% of its original size
+    #    width, height = image.size
+    #    image = image.resize((int(width * 0.4), int(height * 0.4)))
+    #
+    #    # Flip the image vertically
+    #    image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    #
+    #    # Create a PhotoImage object from the PIL image
+    #    photo_image = ImageTk.PhotoImage(image)
+    #
+    #    # Add the image to the canvas
+    #    loading = canvas.create_image(512, 300, image=photo_image)
+    #
+    #    # Place the loading image on top of everything else
+    #    canvas.tag_raise(loading)
+    #
+    #    # Initialize the angle
+    #    angle = 0
+    #
+    #    # Start the rotation
+    #    update_image()
+    #
+    #    # Start the getTimeTableData.py script
+    #    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
+    #
+    #    # Wait until the fetch_data is set to False
+    #    check_fetch_data()
 
-    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
-    global image, photo_image, canvas, loading, angle
+    # Delete the text after 1second
+    window.after(2000, lambda: canvas.delete(big_text))
 
-    # Load the image using PIL
-    image = Image.open(relative_to_assets("Loading.png"))
 
-    # Resize the image to 30% of its original size
-    width, height = image.size
-    image = image.resize((int(width * 0.4), int(height * 0.4)))
-
-    # Flip the image vertically
-    image = image.transpose(Image.FLIP_TOP_BOTTOM)
-
-    # Create a PhotoImage object from the PIL image
-    photo_image = ImageTk.PhotoImage(image)
-
-    # Add the image to the canvas
-    loading = canvas.create_image(512, 300, image=photo_image)
-
-    # Place the loading image on top of everything else
-    canvas.tag_raise(loading)
-
-    # Initialize the angle
-    angle = 0
-
-    # Start the rotation
-    update_image()
-
-    # Start the getTimeTableData.py script
-    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
-
-    # Wait until the fetch_data is set to False
-    check_fetch_data()
 
 def check_fetch_data():
-    with open('build\\globals.json', 'r', encoding='utf-8') as f:
+    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    if data['fetch_data']:
+    if data["fetch_data"]:
         # If fetch_data is still True, check again after 1 second
         window.after(1000, check_fetch_data)
     else:
@@ -401,7 +458,7 @@ button_2 = Button(
     image=button_image_2,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
+    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "info.py")]),
     relief="flat"
 )
 button_2.place(
@@ -467,7 +524,7 @@ button_5 = Button(
     highlightthickness=0,
     command=lambda: change_timetable_time_period(),
     relief="flat",
-    activeforeground='#000000',
+    activeforeground="#000000",
     activebackground="#D9D9D9"
 )
 button_5.place(
@@ -477,7 +534,7 @@ button_5.place(
     height=45.0
 )
 
-timetable_time_period_label = Label(text="Aktuální", bg="#D9D9D9", fg='#000000', font=("Kanit", 30 * -1), anchor="center")
+timetable_time_period_label = Label(text="Aktuální", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
 timetable_time_period_label.place(
     x=43.0 + 75.0,
     y=540.0 + 22.5,
@@ -505,21 +562,21 @@ button_6.place(
 window.resizable(False, False)
 
 # Set the timetable time period to Actual by writing permanent to the globals.json file an then calling the change_timetable_time_period function
-with open('build\\globals.json', 'r') as f:
+with open(OUTPUT_PATH / "globals.json", "r") as f:
     data = json.load(f)
-    data['timetable_time_period'] = "Permanent"
-    with open('build\\globals.json', 'w') as f:
+    data["timetable_time_period"] = "Permanent"
+    with open(OUTPUT_PATH / "globals.json", "w") as f:
         json.dump(data, f)
 change_timetable_time_period()
 
 generate_timetable()
 
 def check_and_regenerate():
-    with open('build\\globals.json', 'r') as f:
+    with open(OUTPUT_PATH / "globals.json", "r") as f:
         data = json.load(f)
         #print(data)
-        #print(data['regenerate_timetable'])
-    if data['regenerate_timetable'] == True:
+        #print(data["regenerate_timetable"])
+    if data["regenerate_timetable"] == True:
         # Your code here
         print("Regenerating")
         generate_timetable()
@@ -532,7 +589,34 @@ def check_and_regenerate():
 check_and_regenerate()
 
 
-change_timetable_name(config["timetableName"])
+# If the window is not touched for more than 30 seconds, than change the timetable time type to a default one from the config.json file
+def check_timetable_inactivity():
+    global timetable_inactivity
+    if timetable_inactivity >= 30:
+        with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
+            config = json.load(f)
+            data = {}
+            data["timetable_type"] = config["timetable_type"]
+            data["timetable_data"] = config["timetable_data"]
+            data["timetable_time_period"] = "Permanent"
+            data["regenerate_timetable"] = True
+            with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
+                json.dump(data, f)
+            
+        change_timetable_time_period()
+        timetable_inactivity = 0
+
+# Increase the timetable_inactivity variable every second
+def increase_timetable_inactivity():
+    global timetable_inactivity
+    timetable_inactivity += 1
+    check_timetable_inactivity()
+    window.after(1000, increase_timetable_inactivity)
+
+increase_timetable_inactivity()
+
+
+
 
 canvas.tag_raise(image_2)
 canvas.tag_raise(image_3)

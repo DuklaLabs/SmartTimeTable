@@ -1,5 +1,6 @@
 {
-  "fileComment": "This file specifies where the specific timetable is located and the default timetable that should be displayed",
-  "timetableRoom": "46",
-  "timetableName": "IT Laboratoř 46"
+  "fileComment": "This file specifies where the timetable is located and the default timetable that should be displayed",
+  "timetable_data": "60",
+  "timetable_type": "Room"
+  
 }
