@@ -8,6 +8,8 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+OUTPUT_PATH = Path(__file__).parent
+
 timetableData_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'timetableData')
 Path(timetableData_dir).mkdir(parents=True, exist_ok=True)
 
@@ -247,8 +249,7 @@ def get_timeTables(url, Json_file):
         global runs
         runs += 3
         
-        
-            
+
 def get_table(typ, url, file):
     
     global network_time
@@ -337,15 +338,14 @@ print (f"Total Execution time: {network_time + processing_time}")
 
 
 # Nastavení globální proměnné fetch_data na False po 5 sekundách
-with open('build\\globals.json', 'r', encoding='utf-8') as f:
+with open(OUTPUT_PATH / 'globals.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-if data['fetch_data']:
+if data['fetch_data'] == True:
     time.sleep(5)
     data['fetch_data'] = False
-    
-with open('build\\globals.json', 'w', encoding='utf-8') as f:
-    json.dump(data, f)
+    with open(OUTPUT_PATH /'globals.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f)
     
     
     

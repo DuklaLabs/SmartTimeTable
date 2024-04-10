@@ -3,7 +3,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Scrollbar, VERT
 import json
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\teachers")
+ASSETS_PATH = OUTPUT_PATH / "assets" / "teachers"
 
 
 def relative_to_assets(path: str) -> Path:
@@ -107,26 +107,26 @@ def update_globals(teacher_name):
     if buttons_enabled:
 
         # Load the data from the JSON file
-        with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Update the values
-        data['timetable_data'] = teacher_name
-        data['timetable_type'] = 'Teacher'
-        data['regenerate_timetable'] = True
+        data["timetable_data"] = teacher_name
+        data["timetable_type"] = "Teacher"
+        data["regenerate_timetable"] = True
 
         # Write the data back to the JSON file
-        with open('build\\globals.json', 'w', encoding='utf-8') as f:
+        with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
             json.dump(data, f)
 
         print(data)
-        print(data['regenerate_timetable'])
+        print(data["regenerate_timetable"])
         window.destroy()
 
 
 
 # Load teacher data from JSON file
-with open('build\\timetableData\\teachers.json', 'r', encoding='utf-8') as f:
+with open(OUTPUT_PATH / "timetableData" / "info" / "teachersInfo.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 teacher_buttons = []
@@ -134,7 +134,7 @@ teacher_buuton_ids = []
 button_image = PhotoImage(file=relative_to_assets("TeacherButton.png"))
 
 # Iterate over teacher data
-for teacher in data['teachers']:
+for teacher in data["teachers"]:
     # Get teacher name
     teacher_name = list(teacher.keys())[0]
 

@@ -6,7 +6,7 @@ from PIL import Image,ImageTk
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")
+ASSETS_PATH = OUTPUT_PATH / "assets" / "credits"
 
 
 def relative_to_assets(path: str) -> Path:

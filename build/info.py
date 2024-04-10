@@ -7,7 +7,7 @@ import json
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\credits")
+ASSETS_PATH = OUTPUT_PATH / "assets" / "credits"
 
 
 def relative_to_assets(path: str) -> Path:
@@ -53,32 +53,32 @@ button_1.place(
 
 
 # Load the currently selected timetable from the globals.json file
-with open('build\\globals.json', 'r', encoding='utf-8') as file:
+with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as file:
     data = json.load(file)
-    timetable_type = data['timetable_type'].lower()
-    timetable_data = data['timetable_data']
+    timetable_type = data["timetable_type"].lower()
+    timetable_data = data["timetable_data"]
 
 # Open the corresponding timetable info file depending on the timetable type
 if timetable_type == "class":
-    with open(f"build\\timetableData\\info\\classesInfo.json", "r", encoding='utf-8') as file:
-        timetable_info_list = json.load(file)['classes']
+    with open(OUTPUT_PATH / "timetableData" / "info" / "classesInfo.json", "r", encoding="utf-8") as file:
+        timetable_info_list = json.load(file)["classes"]
         timetable_info = next((class_info for class_info in timetable_info_list if timetable_data in class_info), None)
 
 elif timetable_type == "teacher":
-    with open(f"build\\timetableData\\info\\teachersInfo.json", "r", encoding='utf-8') as file:
-        timetable_info_list = json.load(file)['teachers']
+    with open(OUTPUT_PATH / "timetableData" / "info" / "teachersInfo.json", "r", encoding="utf-8") as file:
+        timetable_info_list = json.load(file)["teachers"]
         timetable_info = next((teacher_info for teacher_info in timetable_info_list if timetable_data in teacher_info), None)
 
 elif timetable_type == "room":
-    with open(f"build\\timetableData\\info\\roomsInfo.json", "r", encoding='utf-8') as file:
-        timetable_info_list = json.load(file)['rooms']
+    with open(OUTPUT_PATH / "timetableData" / "info" / "roomsInfo.json", "r", encoding="utf-8") as file:
+        timetable_info_list = json.load(file)["rooms"]
         timetable_info = next((room_info for room_info in timetable_info_list if timetable_data in room_info), None)
 
 # Create the title by getting the name from the corresponding timetable info file
 if timetable_info is not None:
-    timetable_name = timetable_info[timetable_data].get('name', 'Default Name')
+    timetable_name = timetable_info[timetable_data].get("name", "Default Name")
 else:
-    timetable_name = 'Unknown Timetable'
+    timetable_name = "Unknown Timetable"
 canvas.create_text(
     512.0,
     60.0,
@@ -93,15 +93,15 @@ import textwrap
 info_text = ""
 if timetable_info is not None:
     # Create the info text by getting the info from the corresponding timetable info file
-    info_text = timetable_info[timetable_data].get('info', 'No info available')
+    info_text = timetable_info[timetable_data].get("info", "No info available")
 else:
-    info_text = 'No info available'
+    info_text = "No info available"
 
-# Wrap the text if it's too long
+# Wrap the text if it"s too long
 wrapped_text = textwrap.fill(info_text, width=60)
 
 # Split the wrapped text into lines
-lines = wrapped_text.split('\n')
+lines = wrapped_text.split("\n")
 
 # Calculate the initial y coordinate
 y = 150

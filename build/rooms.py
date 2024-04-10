@@ -4,7 +4,7 @@ import json
 import math
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Majrich\Documents\Code\SmartTimeTable\build\assets\rooms")
+ASSETS_PATH = OUTPUT_PATH / "assets" / "rooms"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -216,20 +216,20 @@ def update_globals(room_name):
     if buttons_enabled_number or buttons_enabled_d or buttons_enabled_other:
 
         # Load the data from the JSON file
-        with open('build\\globals.json', 'r', encoding='utf-8') as f:
+        with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Update the values
-        data['timetable_data'] = room_name
-        data['timetable_type'] = 'Room'
-        data['regenerate_timetable'] = True
+        data["timetable_data"] = room_name
+        data["timetable_type"] = "Room"
+        data["regenerate_timetable"] = True
 
         # Write the data back to the JSON file
-        with open('build\\globals.json', 'w', encoding='utf-8') as f:
+        with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
             json.dump(data, f)
 
         print(data)
-        print(data['regenerate_timetable'])
+        print(data["regenerate_timetable"])
         window.destroy()
 
 
@@ -239,29 +239,29 @@ def update_globals(room_name):
 
 
 # Load room data from JSON file
-with open('build\\timetableData\\rooms.json', 'r', encoding='utf-8') as f:
+with open(OUTPUT_PATH / "timetableData" / "rooms.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # Separate the rooms into three groups: rooms with only number, rooms starting with the letter D, the rest
 rooms = {
-    'number': [],
-    'D': [],
-    'other': []
+    "number": [],
+    "D": [],
+    "other": []
 }
 
-for room in data['rooms']:
+for room in data["rooms"]:
     room_name = list(room.keys())[0]
     if room_name[0].isdigit():
-        rooms['number'].append(room)
-    elif room_name[0] == 'D':
-        rooms['D'].append(room)
+        rooms["number"].append(room)
+    elif room_name[0] == "D":
+        rooms["D"].append(room)
     else:
-        rooms['other'].append(room)
+        rooms["other"].append(room)
 
 # Sort the number rooms by their number, the D rooms by the number after the D, the other rooms alphabetically
-rooms['number'] = sorted(rooms['number'], key=lambda x: int(list(x.keys())[0]))
-rooms['D'] = sorted(rooms['D'], key=lambda x: int(list(x.keys())[0][1:]))
-rooms['other'] = sorted(rooms['other'], key=lambda x: list(x.keys())[0])
+rooms["number"] = sorted(rooms["number"], key=lambda x: int(list(x.keys())[0]))
+rooms["D"] = sorted(rooms["D"], key=lambda x: int(list(x.keys())[0][1:]))
+rooms["other"] = sorted(rooms["other"], key=lambda x: list(x.keys())[0])
 
 # Create a list of room buttons and their IDs
 number_room_buttons = []
@@ -274,7 +274,7 @@ other_room_button_ids = []
 button_image = PhotoImage(file=relative_to_assets("RoomButton.png"))
 
 # Iterate over rooms and create buttons for each room
-for room in rooms['number']:
+for room in rooms["number"]:
     room_name = list(room.keys())[0]
     button = Button(image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
                     text=room_name, font=("Kanit Light", 20), compound="center",
@@ -288,7 +288,7 @@ for room in rooms['number']:
     button_id = canvas.create_window(512.0 - 200, 130.0 + 65 * len(number_room_buttons), window=button)
     number_room_button_ids.append(button_id)
 
-for room in rooms['D']:
+for room in rooms["D"]:
     room_name = list(room.keys())[0]
     button = Button(image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
                     text=room_name, font=("Kanit Light", 20), compound="center",
@@ -302,7 +302,7 @@ for room in rooms['D']:
     button_id = canvas.create_window(512.0, 130.0 + 65 * len(d_room_buttons), window=button)
     d_room_button_ids.append(button_id)
 
-for room in rooms['other']:
+for room in rooms["other"]:
     room_name = list(room.keys())[0]
     button = Button(image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
                     text=room_name, font=("Kanit Light", 20), compound="center",

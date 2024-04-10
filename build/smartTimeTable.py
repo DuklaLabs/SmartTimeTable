@@ -113,15 +113,6 @@ image_2 = canvas.create_image(
 )
 
 
-image_image_3 = PhotoImage(
-    file=relative_to_assets("Weekdays.png"))
-image_3 = canvas.create_image(
-    38.0,
-    323.0,
-    image=image_image_3
-)
-
-
 
 
 main_ = []
@@ -184,11 +175,18 @@ def generate_timetable():
                 main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
                 bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
                 top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
+
+                # If there is no top or bottom text then center the main text
+                if top_text == "" and bottom_text == "":
+                    main_text_center_offset = 30
+                else:
+                    main_text_center_offset = 0
+
                 if len(main_text) <= 5:
                     main_size = 28
                 else:
                     main_size = 24
-                main_.append(canvas.create_text(current_position - position_offset + 116 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", main_size * -1)))
+                main_.append(canvas.create_text(current_position - position_offset + main_text_center_offset + 116 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", main_size * -1)))
                 main_texts[i][j] = main_[-1]
                 if len(bottom_text) <= 4:
                     bottom_size = 20
@@ -201,18 +199,25 @@ def generate_timetable():
             except Exception as e:
                 print(f"Error creating ¨lesson: {e}")
 
+    global weekdays_texts
+
     canvas.tag_raise(image_2)
-    canvas.tag_raise(image_3)
+    for i in range(5):
+        canvas.tag_raise(weekdays_texts[i])
     # Raise all dates
     for row in dates:
         for date in row:
             if date is not None:
                 canvas.tag_raise(date)
 
-    #set the regenarate timetable variable in globals.json to false
+    # Set the regenarate timetable variable in globals.json to false
     data["regenerate_timetable"] = False
     with open(OUTPUT_PATH / "globals.json", "w") as f:
         json.dump(data, f)
+
+    # Set the timetable inactivity to 0
+    global timetable_inactivity
+    timetable_inactivity = 0
 
 
 
@@ -292,6 +297,7 @@ import json
 
 # Create the dates matrix
 dates = [[None] * 5 for _ in range(1)]
+weekdays_texts = [None for _ in range(5)]
 
 def change_timetable_time_period():
     # Load the data from the JSON file
@@ -326,11 +332,30 @@ def change_timetable_time_period():
             date = start_date + datetime.timedelta(days=j + offset)
             dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
 
+    weekdays = ["Po", "Út", "St", "Čt", "Pá"]
+    for j in range(5):
+        if weekdays_texts[j] is not None:
+            canvas.delete(weekdays_texts[j])
+            weekdays_texts[j] = None
+            window.update()
+        
+    if data["timetable_time_period"] == "Permanent":
+        weekdays_y = 185
+        weekdays_text_size = 32
+    else:
+        weekdays_y = 175
+        weekdays_text_size = 27
+    for i in range(5):
+        weekdays_texts[i] = canvas.create_text(39, weekdays_y + i * 75, anchor="center", text=weekdays[i], fill="#D3D3D3", font=("Inter", weekdays_text_size * -1))
+
     data["regenerate_timetable"] = True
 
     # Write the data back to the JSON file
     with open(OUTPUT_PATH / "globals.json", "w", encoding= "utf-8") as f:
         json.dump(data, f)
+
+    # Update the window
+    window.update()
 
 
 
@@ -341,7 +366,6 @@ def destroy_dates():
         if dates[0][j] is not None:
             canvas.delete(dates[0][j])
             dates[0][j] = None
-            window.update()
 
 
 
@@ -600,6 +624,7 @@ def check_timetable_inactivity():
             data["timetable_data"] = config["timetable_data"]
             data["timetable_time_period"] = "Permanent"
             data["regenerate_timetable"] = True
+            data["fetch_data"] = False
             with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
                 json.dump(data, f)
             
@@ -619,8 +644,8 @@ increase_timetable_inactivity()
 
 
 canvas.tag_raise(image_2)
-canvas.tag_raise(image_3)
-#raise all dates
+for i in range(5):
+    canvas.tag_raise(weekdays_texts[i])
 # Raise all dates
 for row in dates:
     for date in row:

@@ -1,8 +1,12 @@
 import vlc
 import time
+from pathlib import Path
   
+OUTPUT_PATH = Path(__file__).parent
+ASSETS_PATH = OUTPUT_PATH / "assets" / "videos"
+
 media_player = vlc.MediaPlayer()
-media = vlc.Media("C:\\Users\\Majrich\\Documents\\Code\\SmartTimeTable\\build\\assets\\videos\\SpinningFish.mp4")
+media = vlc.Media(ASSETS_PATH / "SpinningFish.mp4")
 media_player.set_media(media)
 media_player.toggle_fullscreen()
   
