@@ -5,6 +5,10 @@ import json
 from pathlib import Path
 import time
 import logging
+from concurrent.futures import ThreadPoolExecutor
+import requests_cache
+import lxml
+import orjson
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -31,13 +35,14 @@ network_time = 0
 processing_time = 0
 runs = 0
 
+session = requests_cache.CachedSession('bakalari_cache', expire_after=100000)
 
 def get_links(url, soubor_nazev):
     try:
         # Získejte obsah stránky pomocí knihovny requests
-        response = requests.get(url)
+        response = session.get(url)
         response.raise_for_status() 
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, 'lxml')
         with open(soubor_nazev, 'w', encoding='utf-8') as soubor:
             soubor.write(response.text)
         
@@ -95,7 +100,7 @@ def get_lessons(soup):
     skip = False
     for day in days:
         hours = soup.find_all('div', class_="bk-timetable-cell")
-        day_json = json.loads('{}')
+        day_json = orjson.loads(b'{}')
         nmbr = 0
         sp=0
         for hour in hours:
@@ -158,27 +163,11 @@ def check_cell(hour, class_):
     
     
 def get_data(cell, nmbr):
-    group = ""
-    room = ""
-    subject = ""
-    teacher = ""
-    subject_text = ""
-    change_info = ""
-    theme = ""
-    type_ = ""
-    change_info = ""
-    absencetext = ""
-    has_absent = ""
-    absent_info_text = ""
-    removed_info = ""
-    lesson_ = ""
-    teacher_text = ""
     if cell:
         js = cell.get('data-detail')
-         
-        detail_json = json.loads(js)
+        detail_json = orjson.loads(js.encode('utf-8'))
         type_ = detail_json.get('type')
-           
+        group = room = lesson_ = subject = teacher = subject_text = teacher_text = change_info = theme = absencetext = has_absent = absent_info_text = removed_info = ""
         if type_ == "absent":
             subject = detail_json.get('absentinfo')
             subject_text = detail_json.get('InfoAbsentName')
@@ -189,65 +178,56 @@ def get_data(cell, nmbr):
             room = detail_json.get('room')
             lesson_ = detail_json.get('subjecttext').split('|').pop(2).strip().split(' ')[0]
             subject = cell.find('div', class_="middle zapsano")
-            if not subject:
-                subject = cell.find('div', class_="middle").text
-            else:
-                subject = subject.text
-            test_span = cell.find('div', class_="bottom").find('span')
-            if test_span:
-                teacher = test_span.text
-            else:
-                teacher = "" 
+            subject = subject.text if subject else cell.find('div', class_="middle").text
+            teacher = cell.find('div', class_="bottom").find('span')
+            teacher = teacher.text if teacher else ""
             subject_text = detail_json.get('subjecttext').split('|').pop(0).strip() if 'subjecttext' in detail_json else ""
             teacher_text = detail_json.get('teacher') if 'teacher' in detail_json else ""
             change_info = detail_json.get('changeinfo') if 'changeinfo' in detail_json else ""
             theme = detail_json.get('theme') if 'theme' in detail_json else ""
-            change_info = detail_json.get("changeinfo") if 'changeinfo' in detail_json else ""
             absencetext = detail_json.get("absencetext") if 'absencetext' in detail_json else ""
             has_absent = detail_json.get("hasAbsent") if 'hasAbsent' in detail_json else ""
             absent_info_text = detail_json.get("absentInfoText") if 'absentInfoText' in detail_json else ""
         else:
             print("error"+ type_)
         # Vytvoření objektu s informacemi o hodině
-    lesson = {
-        "lesson": lesson_,
-        "group": group,
-        "room": room,
-        "subject": subject,
-        "subject_text": subject_text,
-        "teacher": teacher,
-        "teacher_text": teacher_text,
-        "change_info": change_info,
-        "theme": theme,
-        "type": type_,
-        "absencetext": "" if None else absencetext,
-        "has_absent": "true" if has_absent else "false",
-        "absent_info_text": absent_info_text,
-        "removed_info": removed_info
-    }
-    
-    return lesson
+        lesson = {
+            "lesson": lesson_,
+            "group": group,
+            "room": room,
+            "subject": subject,
+            "subject_text": subject_text,
+            "teacher": teacher,
+            "teacher_text": teacher_text,
+            "change_info": change_info,
+            "theme": theme,
+            "type": type_,
+            "absencetext": "" if None else absencetext,
+            "has_absent": "true" if has_absent else "false",
+            "absent_info_text": absent_info_text,
+            "removed_info": removed_info
+        }
+        return lesson
   
+
 def get_timeTables(url, Json_file):
+    global runs
     Json_file_path = os.path.join(timetableData_dir, Json_file)
-    with open(Json_file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-    # Projdi každého učitele
-    for obj in data[Json_file.replace('.json','')]:
-        # Získání klíče objektu (jméno učitele)
-        name = next(iter(obj))
-        print (name)
-        # Získání hodnot pro jednotlivé proměnné
-        permanent_url = obj[name]['Permanent']
-        actual_url = obj[name]['Actual']
-        next_url = obj[name]['Next']
-        slozka = os.path.join(timetableData_dir, f"{Json_file.replace('.json','')}/{name}")
-        Path(slozka).mkdir(parents=True, exist_ok=True)
-        get_table('permanent', f'{url}{permanent_url}', Path(slozka))
-        get_table('actual', f'{url}{actual_url}', Path(slozka))
-        get_table('next', f'{url}{next_url}', Path(slozka))
-        global runs
-        runs += 3
+    with open(Json_file_path, 'rb') as file:
+        data = orjson.loads(file.read())
+    with ThreadPoolExecutor(max_workers=30) as executor:
+        for obj in data[Json_file.replace('.json','')]:
+            name = next(iter(obj))
+            print(name)
+            permanent_url = obj[name]['Permanent']
+            actual_url = obj[name]['Actual']
+            next_url = obj[name]['Next']
+            slozka = os.path.join(timetableData_dir, f"{Json_file.replace('.json','')}/{name}")
+            Path(slozka).mkdir(parents=True, exist_ok=True)
+            executor.submit(get_table, 'permanent', f'{url}{permanent_url}', Path(slozka))
+            executor.submit(get_table, 'actual', f'{url}{actual_url}', Path(slozka))
+            executor.submit(get_table, 'next', f'{url}{next_url}', Path(slozka))
+            runs += 3
         
 
 def get_table(typ, url, file):
@@ -255,12 +235,12 @@ def get_table(typ, url, file):
     global network_time
     global processing_time
     start_time = time.time()
-    response = requests.get(url)
+    response = session.get(url)
     response.raise_for_status() 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, 'lxml')
     end_time = time.time() 
-    print("network_time")
-    print(end_time-start_time)
+    #print("network_time")
+    #print(end_time-start_time)
     network_time += int((end_time - start_time)*1000) 
     
     start_time = time.time()
@@ -269,8 +249,8 @@ def get_table(typ, url, file):
         soubor.write(str(lessons).replace('\'','"').replace('None','""'))
         
     end_time = time.time()
-    print("process_time")
-    print(end_time-start_time)
+    #print("process_time")
+    #print(end_time-start_time)
     processing_time += int((end_time - start_time)*1000) 
 
 def get_OBJ(link):
@@ -285,7 +265,7 @@ def get_OBJ(link):
 
 
 
-
+script_start_time = time.time()
 
 # Nastavte název souboru, kam chcete uložit odpověď
 nazev_souboru = 'odpoved.html'
@@ -304,50 +284,47 @@ response.raise_for_status()
 
 get_links(url_s_parametrem, cesta_k_souboru)
 
-# vytvoření souboru teachers.json
-with open(os.path.join(timetableData_dir, 'teachers.json'), 'w', encoding='utf-8') as soubor:
-    soubor.write(str(teachers).replace('\'','"'))
+# Serialize teachers dictionary
+with open(os.path.join(timetableData_dir, 'teachers.json'), 'wb') as file:
+    file.write(orjson.dumps(teachers))
 
-with open(os.path.join(timetableData_dir, 'classes.json'), 'w', encoding='utf-8') as soubor:
-    soubor.write(str(classes).replace('\'','"'))
+# Serialize classes dictionary
+with open(os.path.join(timetableData_dir, 'classes.json'), 'wb') as file:
+    file.write(orjson.dumps(classes))
 
-with open(os.path.join(timetableData_dir, 'rooms.json'), 'w', encoding='utf-8') as soubor:
-    soubor.write(str(rooms).replace('\'','"'))
+# Serialize rooms dictionary
+with open(os.path.join(timetableData_dir, 'rooms.json'), 'wb') as file:
+    file.write(orjson.dumps(rooms))
 
-with open(os.path.join(timetableData_dir, 'conf.json'), 'w', encoding='utf-8') as soubor:
-    soubor.write(str(conf).replace('\'','"'))
+# Serialize conf dictionary
+with open(os.path.join(timetableData_dir, 'conf.json'), 'wb') as file:
+    file.write(orjson.dumps(conf))
 
     
 get_timeTables(url_s_parametrem, 'teachers.json')
-print ("teachers done")
 get_timeTables(url_s_parametrem, 'classes.json')
-print("classes done")
 get_timeTables(url_s_parametrem, 'rooms.json')
-print("rooms done")
+
+script_end_time = time.time()
 
 print (f"total Network time: {network_time}")
 print (f"total Procesing time: {processing_time}")
 print (f"Network time per run: {network_time/runs}")
 print (f"Processing time per run: {processing_time/runs}")
 print (f"Total runs: {runs}")
-print (f"Total Executions: {runs/3}")
-print (f"Total Execution time per run: {network_time/runs + processing_time/runs}") 
-print (f"Total Execution time: {network_time + processing_time}")
+print (f"Total Execution time per run: {(script_end_time-script_start_time)/runs}") 
+print (f"Total Execution time: {script_end_time-script_start_time}")
 
 
 
 
-# Nastavení globální proměnné fetch_data na False po 5 sekundách
+time.sleep(2)
+# Nastavení globální proměnné fetch_data na False po 2 sekundách
 with open(OUTPUT_PATH / 'globals.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
-
-if data['fetch_data'] == True:
-    time.sleep(5)
     data['fetch_data'] = False
     with open(OUTPUT_PATH /'globals.json', 'w', encoding='utf-8') as f:
         json.dump(data, f)
-    
-    
     
 
 

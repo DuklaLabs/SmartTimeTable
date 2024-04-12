@@ -75,9 +75,9 @@ class_buttons_ = []
 # Extract class names
 class_names = [list(class_dict.keys())[0] for class_dict in class_data["classes"]]
 
-# Set the number of rows and columns for the buttons
-num_rows = 4
 num_cols = 4
+
+num_rows = len(class_names) // num_cols + 1
 
 # Initialize the class_buttons list
 class_buttons = [[None] * num_cols for _ in range(num_rows)]

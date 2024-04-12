@@ -394,55 +394,51 @@ canvas.itemconfig(loading, state="hidden")
 def fetch_data():
 
     # Create a big "Mimo provoz!" text centered in the middle of the screen
-    global big_text
-    big_text = canvas.create_text(512, 300, anchor="center", text="Mimo provoz!", fill="#0000FF", font=("Inter", 100 * -1))
+    # global big_text
+    # big_text = canvas.create_text(512, 300, anchor="center", text="Mimo provoz!", fill="#0000FF", font=("Inter", 100 * -1))
 
-    #    # Load the data from the JSON file
-    #    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-    #        data = json.load(f)
-    #
-    #    data["fetch_data"] = True
-    #
-    #    # Write the data back to the JSON file
-    #    with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
-    #        json.dump(data, f)
-    #
-    #    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
-    #    global image, photo_image, canvas, loading, angle
-    #
-    #    # Load the image using PIL
-    #    image = Image.open(relative_to_assets("Loading.png"))
-    #
-    #    # Resize the image to 30% of its original size
-    #    width, height = image.size
-    #    image = image.resize((int(width * 0.4), int(height * 0.4)))
-    #
-    #    # Flip the image vertically
-    #    image = image.transpose(Image.FLIP_TOP_BOTTOM)
-    #
-    #    # Create a PhotoImage object from the PIL image
-    #    photo_image = ImageTk.PhotoImage(image)
-    #
-    #    # Add the image to the canvas
-    #    loading = canvas.create_image(512, 300, image=photo_image)
-    #
-    #    # Place the loading image on top of everything else
-    #    canvas.tag_raise(loading)
-    #
-    #    # Initialize the angle
-    #    angle = 0
-    #
-    #    # Start the rotation
-    #    update_image()
-    #
-    #    # Start the getTimeTableData.py script
-    #    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
-    #
-    #    # Wait until the fetch_data is set to False
-    #    check_fetch_data()
+    # Load the data from the JSON file
+    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    data["fetch_data"] = True
+    # Write the data back to the JSON file
+    with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
+        json.dump(data, f)
+    
+    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
+    global image, photo_image, canvas, loading, angle
+    
+    # Load the image using PIL
+    image = Image.open(relative_to_assets("Loading.png"))
+    # Resize the image to 30% of its original size
+    width, height = image.size
+    image = image.resize((int(width * 0.4), int(height * 0.4)))
+    
+    # Flip the image vertically
+    image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    
+    # Create a PhotoImage object from the PIL image
+    photo_image = ImageTk.PhotoImage(image)
+    
+    # Add the image to the canvas
+    loading = canvas.create_image(512, 300, image=photo_image)
+    
+    # Place the loading image on top of everything else
+    canvas.tag_raise(loading)
+    
+    # Initialize the angle
+    angle = 0
+    # Start the rotation
+    update_image()
 
-    # Delete the text after 1second
-    window.after(2000, lambda: canvas.delete(big_text))
+    # Start the getTimeTableData.py script
+    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
+    
+    # Wait until the fetch_data is set to False
+    check_fetch_data()
+
+    # Delete the big text after 1second
+    # window.after(2000, lambda: canvas.delete(big_text))
 
 
 
