@@ -27,5 +27,6 @@
         "titleBar.inactiveBackground": "#ef604299",
         "titleBar.inactiveForeground": "#15202b99"
     },
-    "peacock.color": "#ef6042"
+    "peacock.color": "#ef6042",
+    "workbench.tree.indent": 20
 }

@@ -1,0 +1,6 @@
+{
+  "fileComment": "This file specifies where the timetable is located and the default timetable that should be displayed",
+  "timetable_data": "60",
+  "timetable_type": "Room"
+  
+}
