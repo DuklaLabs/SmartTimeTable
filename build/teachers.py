@@ -1,6 +1,8 @@
 from pathlib import Path
+import sys
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Scrollbar, VERTICAL, Frame
 import json
+from subprocess import Popen
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "teachers"
@@ -78,7 +80,7 @@ def drag(event):
                 canvas.move(button, 0, y_movement)
             last_y_position = canvas.canvasy(y)
 
-        if abs(drag_start_position - current_position) > 20:
+        if y_movement > 20 or y_movement < -20:
             # Disable the buttons
             buttons_enabled = False
 
@@ -105,6 +107,13 @@ def update_globals(teacher_name):
     global buttons_enabled
     print(buttons_enabled)
     if buttons_enabled:
+        # If "Pavel Požárek" is clicked only start the EasterEgg.py pscript located in the same directory as this script with popen and close the window
+        if teacher_name == "Požárek Pavel":
+            Popen([sys.executable, str(OUTPUT_PATH / "EasterEgg.py")])
+            print("Požárek Pavel")
+            # Wait 10 seconds before closing the window
+            window.after(12000, lambda: window.destroy())
+            return  # Return immediately after destroying the window
 
         # Load the data from the JSON file
         with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
@@ -121,12 +130,13 @@ def update_globals(teacher_name):
 
         print(data)
         print(data["regenerate_timetable"])
-        window.destroy()
+        if window.winfo_exists():
+            window.destroy()
 
 
 
 # Load teacher data from JSON file
-with open(OUTPUT_PATH / "timetableData" / "info" / "teachersInfo.json", "r", encoding="utf-8") as f:
+with open(OUTPUT_PATH / "timetableData" / "teachers.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 teacher_buttons = []

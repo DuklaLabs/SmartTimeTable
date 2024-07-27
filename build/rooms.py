@@ -101,7 +101,6 @@ def drag_number(event):
         y_movement = canvas.canvasy(y) - last_y_position_number
         # Get the y position of the first button using the bbox method
         current_position = canvas.bbox(number_room_button_ids[0])[1]  # Extract only the Y coordinate
-        print(current_position)
         # Limit the movement of the buttons
         if abs(y_movement) > 1:
             if current_position + y_movement <= 171 and current_position + y_movement >= 130 - (65 * (len(number_room_button_ids) - 6)):
@@ -115,8 +114,12 @@ def drag_number(event):
                     canvas.move(button_id, 0, math.copysign(1, y_movement))
                 last_y_position_number = canvas.canvasy(y)
 
-        if abs(drag_start_position_number - current_position) > 20:
+        #print("Start pos " + str(drag_start_position_number))
+        #print("Current pos " + str(current_position))
+
+        if y_movement > 20 or y_movement < -20:
             # Disable the buttons
+            #print("Disabling buttons")
             buttons_enabled_number = False
 
 def drag_d(event):
@@ -139,9 +142,11 @@ def drag_d(event):
                     canvas.move(button_id, 0, math.copysign(1, y_movement))
                 last_y_position_d = canvas.canvasy(y)
         
-
-        if abs(drag_start_position_d - current_position) > 20:
+        #print("Start pos " + str(drag_start_position_d))
+        #print("Current pos " + str(current_position))
+        if y_movement > 20 or y_movement < -20:
             # Disable the buttons
+            #print("Disabling buttons")
             buttons_enabled_d = False
 
 def drag_other(event):
@@ -165,8 +170,11 @@ def drag_other(event):
                         canvas.move(button_id, 0, math.copysign(1, y_movement))
                     last_y_position_other = canvas.canvasy(y)
 
-        if abs(drag_start_position_other - current_position) > 20:
+        #print("Start pos " + str(drag_start_position_other))
+        #print("Current pos " + str(current_position))
+        if y_movement > 20 or y_movement < -20:
             # Disable the buttons
+            #print("Disabling buttons")
             buttons_enabled_other = False
 
 def stop_drag_number(event):
@@ -213,6 +221,7 @@ def enable_buttons_other():
 
 def update_globals(room_name):
     global buttons_enabled_number, buttons_enabled_d, buttons_enabled_other
+    print(buttons_enabled_number, buttons_enabled_d, buttons_enabled_other)
     if buttons_enabled_number or buttons_enabled_d or buttons_enabled_other:
 
         # Load the data from the JSON file

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -10,7 +12,7 @@ import requests_cache
 import lxml
 import orjson
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 OUTPUT_PATH = Path(__file__).parent
 
@@ -168,6 +170,16 @@ def get_data(cell, nmbr):
         detail_json = orjson.loads(js.encode('utf-8'))
         type_ = detail_json.get('type')
         group = room = lesson_ = subject = teacher = subject_text = teacher_text = change_info = theme = absencetext = has_absent = absent_info_text = removed_info = ""
+        
+        # Store the result of detail_json.get() in variables
+        subjecttext = detail_json.get('subjecttext')
+        teacher = detail_json.get('teacher')
+        changeinfo = detail_json.get('changeinfo')
+        theme = detail_json.get('theme')
+        absencetext = detail_json.get('absencetext')
+        hasAbsent = detail_json.get('hasAbsent')
+        absentInfoText = detail_json.get('absentInfoText')
+
         if type_ == "absent":
             subject = detail_json.get('absentinfo')
             subject_text = detail_json.get('InfoAbsentName')
@@ -176,18 +188,18 @@ def get_data(cell, nmbr):
         elif type_ == "atom":
             group = detail_json.get('group')
             room = detail_json.get('room')
-            lesson_ = detail_json.get('subjecttext').split('|').pop(2).strip().split(' ')[0]
+            lesson_ = subjecttext.split('|').pop(2).strip().split(' ')[0] if subjecttext else ""
             subject = cell.find('div', class_="middle zapsano")
             subject = subject.text if subject else cell.find('div', class_="middle").text
             teacher = cell.find('div', class_="bottom").find('span')
             teacher = teacher.text if teacher else ""
-            subject_text = detail_json.get('subjecttext').split('|').pop(0).strip() if 'subjecttext' in detail_json else ""
-            teacher_text = detail_json.get('teacher') if 'teacher' in detail_json else ""
-            change_info = detail_json.get('changeinfo') if 'changeinfo' in detail_json else ""
-            theme = detail_json.get('theme') if 'theme' in detail_json else ""
-            absencetext = detail_json.get("absencetext") if 'absencetext' in detail_json else ""
-            has_absent = detail_json.get("hasAbsent") if 'hasAbsent' in detail_json else ""
-            absent_info_text = detail_json.get("absentInfoText") if 'absentInfoText' in detail_json else ""
+            subject_text = subjecttext.split('|').pop(0).strip() if subjecttext else ""
+            teacher_text = teacher if teacher else ""
+            change_info = changeinfo if changeinfo else ""
+            theme = theme if theme else ""
+            absencetext = "" if None else absencetext
+            has_absent = "true" if hasAbsent else "false"
+            absent_info_text = absentInfoText if absentInfoText else ""
         else:
             print("error"+ type_)
         # Vytvoření objektu s informacemi o hodině
@@ -202,8 +214,8 @@ def get_data(cell, nmbr):
             "change_info": change_info,
             "theme": theme,
             "type": type_,
-            "absencetext": "" if None else absencetext,
-            "has_absent": "true" if has_absent else "false",
+            "absencetext": absencetext,
+            "has_absent": has_absent,
             "absent_info_text": absent_info_text,
             "removed_info": removed_info
         }
@@ -281,7 +293,6 @@ response.raise_for_status()
 
 
 
-
 get_links(url_s_parametrem, cesta_k_souboru)
 
 # Serialize teachers dictionary
@@ -304,6 +315,22 @@ with open(os.path.join(timetableData_dir, 'conf.json'), 'wb') as file:
 get_timeTables(url_s_parametrem, 'teachers.json')
 get_timeTables(url_s_parametrem, 'classes.json')
 get_timeTables(url_s_parametrem, 'rooms.json')
+
+
+def add_teacher(teacher_name, teacher_info):
+    teachers_file = os.path.join(timetableData_dir, 'teachers.json')
+    with open(teachers_file, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    # Add new teacher
+    data["teachers"].append({teacher_name: teacher_info})
+    # Sort teachers by name
+    data["teachers"] = sorted(data["teachers"], key=lambda x: list(x.keys())[0])
+
+    with open(teachers_file, 'w', encoding='utf-8') as file:
+        json.dump(data, file)
+
+# Usage:
+add_teacher("Požárek Pavel", {"Permanent": "none", "Actual": "none", "Next": "none"})
 
 script_end_time = time.time()
 

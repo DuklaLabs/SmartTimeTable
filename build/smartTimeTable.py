@@ -20,6 +20,7 @@ with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
 
+
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
@@ -32,6 +33,7 @@ window.title("SmartTimeTable V0.4 by DuklaLabs")
 window.attributes("-fullscreen", True)
 window.config(cursor="none")
 
+timetable_inactivity = 0
 
 canvas = Canvas(
     window,
@@ -56,7 +58,6 @@ image_1 = canvas.create_image(
 
 dragging = False
 last_x_position = 0
-
 
 def start_drag(event):
     global timetable_inactivity
@@ -114,6 +115,34 @@ image_2 = canvas.create_image(
 
 
 
+# If the window is not touched for more than 30 seconds, than change the timetable time type to a default one from the config.json file
+def check_timetable_inactivity():
+    global timetable_inactivity
+    if timetable_inactivity >= 30:
+        with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
+            config = json.load(f)
+            with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                data["timetable_type"] = config["timetable_type"]
+                data["timetable_data"] = config["timetable_data"]
+                data["timetable_time_period"] = "Permanent"
+                if data["fetch_data"] == True:
+                    data["regenerate_timetable"] = False
+                else:
+                    data["regenerate_timetable"] = True
+                with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
+                    json.dump(data, f)
+            
+        change_timetable_time_period()
+        timetable_inactivity = 0
+
+# Increase the timetable_inactivity variable every second
+def increase_timetable_inactivity():
+    global timetable_inactivity
+    timetable_inactivity += 1
+    check_timetable_inactivity()
+    window.after(1000, increase_timetable_inactivity)
+
 
 main_ = []
 top_ = []
@@ -124,7 +153,6 @@ bottom_texts = [[None] * 5 for _ in range(11)]
 top_texts = [[None] * 5 for _ in range(11)]
 
 position_offset = 901
-timetable_inactivity = 0
 
 def generate_timetable():
     # Destroy the previous timetable
@@ -149,8 +177,16 @@ def generate_timetable():
     print(file_path)
 
     # Load the JSON file
-    with open(file_path, "r", encoding="utf-8") as file:
-        timetable_data = json.load(file)
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            timetable_data = json.load(file)
+    except FileNotFoundError:
+        global timetable_inactivity
+        timetable_inactivity = 10000
+        check_timetable_inactivity()
+        return
+
+    # Rest of the code...
 
     # Define the mapping from timetable_type to text fields
     type_to_text_fields = {
@@ -158,6 +194,8 @@ def generate_timetable():
         "class": {"main": "subject", "top": "room", "bottom": "teacher"},
         "room": {"main": "subject", "top": "teacher", "bottom": "group"},
     }
+
+    
 
     text_fields = type_to_text_fields[timetable_type]
 
@@ -168,33 +206,57 @@ def generate_timetable():
     for j in range(5):
         for i in range(11):
             try:
-                lesson = timetable_data.get(str(j*11 + i), [{}])[0]  # Get the lesson
-                # If the lesson is empty, skip it
-                if lesson == "":
-                    continue
-                main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
-                bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
-                top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
+                if (timetable_type == "class"):
+                    lesson = timetable_data.get(str(j*11 + i), [{}])  # Get the lesson for all groups
+                    # If the lesson is empty, skip it
+                    if lesson == [{}]:
+                        continue
+                    # Loop through all groups and create the lesson by combining the the bottom and top text of each group
+                    # Use the main text of the first group
+                    main_text = lesson[0].get(text_fields["main"], "").replace(" celá", "")
+                    bottom_text = ", ".join([group.get(text_fields["bottom"], "").replace(" celá", "") for group in lesson if group.get(text_fields["bottom"], "").replace(" celá", "")])
+                    top_text = ", ".join([group.get(text_fields["top"], "").replace(" celá", "") for group in lesson if group.get(text_fields["top"], "").replace(" celá", "")])
+                else:
+                    lesson = timetable_data.get(str(j*11 + i), [{}])[0]  # Get the lesson for one group
+                    # If the lesson is empty, skip it
+                    if lesson == "":
+                        continue
+                    main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
+                    bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
+                    top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
 
                 # If there is no top or bottom text then center the main text
                 if top_text == "" and bottom_text == "":
                     main_text_center_offset = 30
-                else:
-                    main_text_center_offset = 0
-
-                if len(main_text) <= 5:
                     main_size = 28
                 else:
-                    main_size = 24
+                    main_text_center_offset = 0
+                    main_size = 28
+
+                if (len(main_text) < 5 and len(top_text) >= 10):
+                    main_size = 22
+                    top_text_center_offset = -5
+                    main_text_center_offset = -5
+                else:
+                    main_size = 28
+                    top_text_center_offset = 0
                 main_.append(canvas.create_text(current_position - position_offset + main_text_center_offset + 116 + i * 150, 190 + j * 75, anchor="center", text=main_text, fill="#D3D3D3", font=("Inter Light", main_size * -1)))
                 main_texts[i][j] = main_[-1]
+
                 if len(bottom_text) <= 4:
                     bottom_size = 20
                 else:
-                    bottom_size = 16
-                bottom_.append(canvas.create_text(current_position - position_offset + 185 + i * 150, 200 + j * 75, anchor="center", text=bottom_text, fill="#D3D3D3", font=("Inter", bottom_size * -1)))
+                    # Dynamic font size so the text fits in the box
+                    bottom_size = 20 - (len(bottom_text) - 5)
+                bottom_.append(canvas.create_text(current_position - position_offset + 184 + i * 150, 200 + j * 75, anchor="center", text=bottom_text, fill="#D3D3D3", font=("Inter", bottom_size * -1)))
                 bottom_texts[i][j] = bottom_[-1]
-                top_.append(canvas.create_text(current_position - position_offset + 185 + i * 150, 175 + j * 75, anchor="center", text=top_text, fill="#D3D3D3", font=("Inter Light", 20 * -1)))
+
+                if len(top_text) <= 4:
+                    top_size = 20
+                else:
+                    # Dynamic font size so the text fits in the box
+                    top_size = 16 - (len(top_text) - 11)
+                top_.append(canvas.create_text((current_position - position_offset + 184 + i * 150) + top_text_center_offset, 175 + j * 75, anchor="center", text=top_text, fill="#D3D3D3", font=("Inter Light", top_size * -1)))
                 top_texts[i][j] = top_[-1]
             except Exception as e:
                 print(f"Error creating ¨lesson: {e}")
@@ -203,7 +265,9 @@ def generate_timetable():
 
     canvas.tag_raise(image_2)
     for i in range(5):
-        canvas.tag_raise(weekdays_texts[i])
+        # Raise all weekdays if they exist
+        if weekdays_texts[i] is not None:
+            canvas.tag_raise(weekdays_texts[i])
     # Raise all dates
     for row in dates:
         for date in row:
@@ -216,7 +280,6 @@ def generate_timetable():
         json.dump(data, f)
 
     # Set the timetable inactivity to 0
-    global timetable_inactivity
     timetable_inactivity = 0
 
 
@@ -378,15 +441,18 @@ def update_image():
     angle = (angle - 3) % 360  # Update the angle
     photo_image = rotate_image(image, angle)  # Rotate the image
     canvas.itemconfig(loading, image=photo_image)  # Update the image on the canvas
+    canvas.tag_raise(loading)  # Place the loading image on top of everything else
     window.after(10, update_image)  # Call this function again after 100 ms
 
 
 image = Image.open(relative_to_assets("Loading.png"))
 photo_image = ImageTk.PhotoImage(image)
-loading = canvas.create_image(512, 300, image=photo_image)
+# Place the loading image in the middle of the refresh button
+loading = canvas.create_image(987, 40, image=photo_image)
+canvas.tag_raise(loading)
+# Update the image
 angle = 0
-# Hide the loading image
-canvas.itemconfig(loading, state="hidden")
+update_image()
 
 
 
@@ -397,6 +463,10 @@ def fetch_data():
     # global big_text
     # big_text = canvas.create_text(512, 300, anchor="center", text="Mimo provoz!", fill="#0000FF", font=("Inter", 100 * -1))
 
+    # Hide the refresh button
+    button_6.place_forget()
+
+
     # Load the data from the JSON file
     with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -405,32 +475,6 @@ def fetch_data():
     with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
         json.dump(data, f)
     
-    # Show the Loading image in the middle of the screen an make it spin until fetch_data is set to False by another script
-    global image, photo_image, canvas, loading, angle
-    
-    # Load the image using PIL
-    image = Image.open(relative_to_assets("Loading.png"))
-    # Resize the image to 30% of its original size
-    width, height = image.size
-    image = image.resize((int(width * 0.4), int(height * 0.4)))
-    
-    # Flip the image vertically
-    image = image.transpose(Image.FLIP_TOP_BOTTOM)
-    
-    # Create a PhotoImage object from the PIL image
-    photo_image = ImageTk.PhotoImage(image)
-    
-    # Add the image to the canvas
-    loading = canvas.create_image(512, 300, image=photo_image)
-    
-    # Place the loading image on top of everything else
-    canvas.tag_raise(loading)
-    
-    # Initialize the angle
-    angle = 0
-    # Start the rotation
-    update_image()
-
     # Start the getTimeTableData.py script
     Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
     
@@ -450,8 +494,9 @@ def check_fetch_data():
         # If fetch_data is still True, check again after 1 second
         window.after(1000, check_fetch_data)
     else:
-        # If fetch_data is False, hide the loading image and regenerate the timetable
-        canvas.itemconfig(loading, state="hidden")
+            # Enable the refresh button
+        print("Fetching data done")
+        button_6.place(x=964.0, y=14.0, width=50.0, height=50.0)
         generate_timetable()
     
 
@@ -578,6 +623,8 @@ button_6.place(
     width=50.0,
     height=50.0
 )
+# Raise the loading image to be on top of the button
+canvas.tag_raise(loading)
 
 window.resizable(False, False)
 
@@ -609,35 +656,12 @@ def check_and_regenerate():
 check_and_regenerate()
 
 
-# If the window is not touched for more than 30 seconds, than change the timetable time type to a default one from the config.json file
-def check_timetable_inactivity():
-    global timetable_inactivity
-    if timetable_inactivity >= 30:
-        with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
-            config = json.load(f)
-            data = {}
-            data["timetable_type"] = config["timetable_type"]
-            data["timetable_data"] = config["timetable_data"]
-            data["timetable_time_period"] = "Permanent"
-            data["regenerate_timetable"] = True
-            data["fetch_data"] = False
-            with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
-                json.dump(data, f)
-            
-        change_timetable_time_period()
-        timetable_inactivity = 0
 
-# Increase the timetable_inactivity variable every second
-def increase_timetable_inactivity():
-    global timetable_inactivity
-    timetable_inactivity += 1
-    check_timetable_inactivity()
-    window.after(1000, increase_timetable_inactivity)
 
 increase_timetable_inactivity()
 
 
-
+canvas.tag_raise(loading)
 
 canvas.tag_raise(image_2)
 for i in range(5):
