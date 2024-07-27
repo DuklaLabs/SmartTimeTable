@@ -1,11 +1,15 @@
-# teachers_window.py
+
+# A menu for selecting a teacher
+# The menu is make up of buttons, each representing a teacher organized in a list that can be scrolled through by dragging
+
 from pathlib import Path
 import sys
 from tkinter import Toplevel, Canvas, Button, PhotoImage
 import json
-from subprocess import Popen
 
-def open_teacher_window(master):
+from EasterEgg import play_video
+
+def open_teacher_menu(master):
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / "assets" / "teachers"
 
@@ -14,13 +18,13 @@ def open_teacher_window(master):
 
     # Create a secondary window
     window = Toplevel(master)
-
     window.geometry("1024x600")
     window.configure(bg="#FFFFFF")
     window.title("SmartTimeTable V0.4 by DuklaLabs - Teachers")
     window.attributes("-fullscreen", True)
     #window.config(cursor="none")
 
+    # Create a canvas for the secondary window
     canvas = Canvas(
         window,
         bg="#2F2F2F",
@@ -32,6 +36,8 @@ def open_teacher_window(master):
     )
     canvas.place(x=0, y=0)
 
+
+    # Create a button to exit the secondary window
     button_image_1 = PhotoImage(
         file=relative_to_assets("ExitButton.png"))
     button_1 = Button(
@@ -41,7 +47,6 @@ def open_teacher_window(master):
         command=lambda: window.destroy(),
         relief="flat"
     )
-
     button_1.place(
         x=935.0,
         y=30.0,
@@ -49,6 +54,9 @@ def open_teacher_window(master):
         height=60.0
     )
 
+
+
+    # Implement draging for the button list
     dragging = False
     last_y_position = 0
     buttons_enabled = True
@@ -88,11 +96,16 @@ def open_teacher_window(master):
     canvas.bind("<B1-Motion>", drag)
     canvas.bind("<ButtonRelease-1>", stop_drag)
 
+
+
+
+
+    # Create buttons for each teacher and assign a function to each
     def update_globals(teacher_name):
         nonlocal buttons_enabled
         if buttons_enabled:
             if teacher_name == "Požárek Pavel":
-                Popen([sys.executable, str(OUTPUT_PATH / "EasterEgg.py")])
+                play_video("Pozi.mp4")
                 window.after(12000, lambda: window.destroy())
                 return
 
