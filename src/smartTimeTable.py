@@ -4,42 +4,42 @@ import os
 from pathlib import Path
 from subprocess import Popen
 import sys
-import time
 from time import strftime
 from tkinter import Tk, Canvas, Button, PhotoImage, Label
 import datetime
 import json
-import asyncio
-print(sys.executable)
 from PIL import Image, ImageTk
 
-from teachers import open_teacher_window
+import globals
+from teachers import open_teachers_menu
+from classes import open_classes_menu
+from rooms import open_rooms_menu
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "timetable"
 
-with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
-    config = json.load(f)
-
-
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+default_timetable_type = globals.timetable_type
+default_timetable_data = globals.timetable_data
+default_timetable_time_period = globals.timetable_time_period
 
-window = Tk()
 
-window.geometry("1024x600")
-window.configure(bg="#FFFFFF")
-window.title("SmartTimeTable V0.4 by DuklaLabs")
-window.attributes("-fullscreen", True)
-#window.config(cursor="none")
+root = Tk()
+
+root.geometry("1024x600")
+root.configure(bg="#FFFFFF")
+root.title("SmartTimeTable V0.4 by DuklaLabs")
+root.attributes("-fullscreen", True)
+#root.config(cursor="none")
 
 timetable_inactivity = 0
 
 canvas = Canvas(
-    window,
+    root,
     bg="#2F2F2F",
     height=600,
     width=1024,
@@ -57,6 +57,13 @@ image_1 = canvas.create_image(
     300.0,
     image=image_image_1
 )
+
+
+
+
+
+
+
 
 
 dragging = False
@@ -108,6 +115,12 @@ canvas.bind("<ButtonRelease-1>", stop_drag)
 
 
 
+
+
+
+
+
+
 image_image_2 = PhotoImage(
     file=relative_to_assets("WeekdaysBackground.png"))
 image_2 = canvas.create_image(
@@ -118,23 +131,16 @@ image_2 = canvas.create_image(
 
 
 
-# If the window is not touched for more than 30 seconds, than change the timetable time type to a default one from the config.json file
+
+
+
+# If the window is not touched for more than 30 seconds, than change the timetable time type to a default one from the globals.py file
 def check_timetable_inactivity():
     global timetable_inactivity
     if timetable_inactivity >= 30:
-        with open(OUTPUT_PATH / "config.json", "r", encoding="utf-8") as f:
-            config = json.load(f)
-            with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-                data = json.load(f)
-                data["timetable_type"] = config["timetable_type"]
-                data["timetable_data"] = config["timetable_data"]
-                data["timetable_time_period"] = "Permanent"
-                if data["fetch_data"] == True:
-                    data["regenerate_timetable"] = False
-                else:
-                    data["regenerate_timetable"] = True
-                with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
-                    json.dump(data, f)
+        globals.timetable_type = default_timetable_type
+        globals.timetable_data = default_timetable_data
+        globals.timetable_time_period = "Permanent"
             
         change_timetable_time_period()
         timetable_inactivity = 0
@@ -144,7 +150,14 @@ def increase_timetable_inactivity():
     global timetable_inactivity
     timetable_inactivity += 1
     check_timetable_inactivity()
-    window.after(1000, increase_timetable_inactivity)
+    root.after(1000, increase_timetable_inactivity)
+
+
+
+
+
+
+
 
 
 main_ = []
@@ -167,14 +180,11 @@ def generate_timetable():
     # Define the mapping from timetable_type to folder name
     type_to_folder = {"teacher": "teachers", "class": "classes", "room": "rooms"}
 
-    # Load the data from the JSON file
-    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
 
     # Construct the file path
-    timetable_type = data["timetable_type"].lower()
-    timetable_data = data["timetable_data"]
-    timetable_period = data["timetable_time_period"].lower()
+    timetable_type = globals.timetable_type.lower()
+    timetable_data = globals.timetable_data
+    timetable_period = globals.timetable_time_period.lower()
 
     file_path = OUTPUT_PATH / "timetableData" / type_to_folder[timetable_type] / timetable_data / f"{timetable_period}.json"
     print(file_path)
@@ -188,8 +198,6 @@ def generate_timetable():
         timetable_inactivity = 10000
         check_timetable_inactivity()
         return
-
-    # Rest of the code...
 
     # Define the mapping from timetable_type to text fields
     type_to_text_fields = {
@@ -277,10 +285,7 @@ def generate_timetable():
             if date is not None:
                 canvas.tag_raise(date)
 
-    # Set the regenarate timetable variable in globals.json to false
-    data["regenerate_timetable"] = False
-    with open(OUTPUT_PATH / "globals.json", "w") as f:
-        json.dump(data, f)
+    globals.regenerate_timetable = False
 
     # Set the timetable inactivity to 0
     timetable_inactivity = 0
@@ -308,11 +313,8 @@ timetable_name_text = canvas.create_text(80, 10, anchor="nw", text="", fill="#D3
 
 
 def update_timetable_name():
-    # Load the currently selected timetable from the globals.json file
-    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as file:
-        data = json.load(file)
-        timetable_type = data["timetable_type"].lower()
-        timetable_data = data["timetable_data"]
+    timetable_type = globals.timetable_type.lower()
+    timetable_data = globals.timetable_data
 
     # Open the corresponding timetable info file depending on the timetable type
     if timetable_type == "class":
@@ -352,7 +354,7 @@ def clock():
     lbl.after(1000, clock)
 
 
-lbl = Label(window, font=("Inter", 28), background = "#303030", foreground = "#B6B6B6")
+lbl = Label(root, font=("Inter", 28), background = "#303030", foreground = "#B6B6B6")
 
 lbl.place(x=770, y=40, anchor="center")
 clock()
@@ -366,13 +368,10 @@ dates = [[None] * 5 for _ in range(1)]
 weekdays_texts = [None for _ in range(5)]
 
 def change_timetable_time_period():
-    # Load the data from the JSON file
-    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
 
     # Update the values
-    if data["timetable_time_period"] == "Actual":
-        data["timetable_time_period"] = "Next"
+    if globals.timetable_time_period == "Actual":
+        globals.timetable_time_period = "Next"
         timetable_time_period_label.config(text="Příští", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
         start_date = datetime.date.today()
@@ -382,13 +381,13 @@ def change_timetable_time_period():
             date = start_date + datetime.timedelta(days=j + offset)
             dates[0][j] = canvas.create_text(39, 205 + j * 75, anchor="center", text=date.strftime("%d.%m."), fill="#D3D3D3", font=("Inter Light", 20 * -1))
 
-    elif data["timetable_time_period"] == "Next":
-        data["timetable_time_period"] = "Permanent"
+    elif globals.timetable_time_period == "Next":
+        globals.timetable_time_period = "Permanent"
         timetable_time_period_label.config(text="Stálý", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
 
-    elif data["timetable_time_period"] == "Permanent":
-        data["timetable_time_period"] = "Actual"
+    elif globals.timetable_time_period == "Permanent":
+        globals.timetable_time_period = "Actual"
         timetable_time_period_label.config(text="Aktuální", bg="#D9D9D9", fg="#000000", font=("Kanit", 30 * -1), anchor="center")
         destroy_dates()
         start_date = datetime.date.today()
@@ -403,9 +402,9 @@ def change_timetable_time_period():
         if weekdays_texts[j] is not None:
             canvas.delete(weekdays_texts[j])
             weekdays_texts[j] = None
-            window.update()
+            root.update()
         
-    if data["timetable_time_period"] == "Permanent":
+    if globals.timetable_time_period == "Permanent":
         weekdays_y = 185
         weekdays_text_size = 32
     else:
@@ -414,14 +413,10 @@ def change_timetable_time_period():
     for i in range(5):
         weekdays_texts[i] = canvas.create_text(39, weekdays_y + i * 75, anchor="center", text=weekdays[i], fill="#D3D3D3", font=("Inter", weekdays_text_size * -1))
 
-    data["regenerate_timetable"] = True
+    globals.regenerate_timetable = True
 
-    # Write the data back to the JSON file
-    with open(OUTPUT_PATH / "globals.json", "w", encoding= "utf-8") as f:
-        json.dump(data, f)
-
-    # Update the window
-    window.update()
+    # Update the root
+    root.update()
 
 
 
@@ -445,7 +440,7 @@ def update_image():
     photo_image = rotate_image(image, angle)  # Rotate the image
     canvas.itemconfig(loading, image=photo_image)  # Update the image on the canvas
     canvas.tag_raise(loading)  # Place the loading image on top of everything else
-    window.after(10, update_image)  # Call this function again after 100 ms
+    root.after(10, update_image)  # Call this function again after 100 ms
 
 
 image = Image.open(relative_to_assets("Loading.png"))
@@ -485,7 +480,7 @@ def fetch_data():
     check_fetch_data()
 
     # Delete the big text after 1second
-    # window.after(2000, lambda: canvas.delete(big_text))
+    # root.after(2000, lambda: canvas.delete(big_text))
 
 
 
@@ -495,7 +490,7 @@ def check_fetch_data():
 
     if data["fetch_data"]:
         # If fetch_data is still True, check again after 1 second
-        window.after(1000, check_fetch_data)
+        root.after(1000, check_fetch_data)
     else:
             # Enable the refresh button
         print("Fetching data done")
@@ -542,7 +537,7 @@ button_3 = Button(
     image=button_image_3,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "classes.py")]),
+    command=lambda: open_classes_menu(root),
     relief="flat"
 )
 button_3.place(
@@ -558,7 +553,7 @@ button_4 = Button(
     image=button_image_4,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: open_teacher_window(window),
+    command=lambda: open_teachers_menu(root),
     relief="flat"
 )
 button_4.place(
@@ -574,7 +569,7 @@ button_7 = Button(
     image=button_image_7,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "rooms.py")]),
+    command=lambda: open_rooms_menu(root),
     relief="flat"
 )
 button_7.place(
@@ -629,31 +624,19 @@ button_6.place(
 # Raise the loading image to be on top of the button
 canvas.tag_raise(loading)
 
-window.resizable(False, False)
+root.resizable(False, False)
 
-# Set the timetable time period to Actual by writing permanent to the globals.json file an then calling the change_timetable_time_period function
-with open(OUTPUT_PATH / "globals.json", "r") as f:
-    data = json.load(f)
-    data["timetable_time_period"] = "Permanent"
-    with open(OUTPUT_PATH / "globals.json", "w") as f:
-        json.dump(data, f)
 change_timetable_time_period()
-
 generate_timetable()
 
 def check_and_regenerate():
-    with open(OUTPUT_PATH / "globals.json", "r") as f:
-        data = json.load(f)
-        #print(data)
-        #print(data["regenerate_timetable"])
-    if data["regenerate_timetable"] == True:
-        # Your code here
+    if globals.regenerate_timetable:
         print("Regenerating")
         generate_timetable()
         # refresh the window
-        window.update()
+        root.update()
 
-    window.after(250, check_and_regenerate)
+    root.after(250, check_and_regenerate)
 
 # Start checking
 check_and_regenerate()
@@ -675,4 +658,4 @@ for row in dates:
         if date is not None:
             canvas.tag_raise(date)
 
-window.mainloop()
+root.mainloop()

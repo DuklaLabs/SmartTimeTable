@@ -1,15 +1,13 @@
-
 # A menu for selecting a teacher
-# The menu is make up of buttons, each representing a teacher organized in a list that can be scrolled through by dragging
+# The menu is made up of buttons, each representing a teacher organized in a list that can be scrolled through by dragging
 
 from pathlib import Path
-import sys
-from tkinter import Toplevel, Canvas, Button, PhotoImage
 import json
+from tkinter import Toplevel, Canvas, Button, PhotoImage, Tk
+import globals
+from playVideo import play_video
 
-from EasterEgg import play_video
-
-def open_teacher_menu(master):
+def open_teachers_menu(master):
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / "assets" / "teachers"
 
@@ -22,7 +20,8 @@ def open_teacher_menu(master):
     window.configure(bg="#FFFFFF")
     window.title("SmartTimeTable V0.4 by DuklaLabs - Teachers")
     window.attributes("-fullscreen", True)
-    #window.config(cursor="none")
+    # window.config(cursor="none")
+    window.lift()
 
     # Create a canvas for the secondary window
     canvas = Canvas(
@@ -36,11 +35,11 @@ def open_teacher_menu(master):
     )
     canvas.place(x=0, y=0)
 
-
     # Create a button to exit the secondary window
     button_image_1 = PhotoImage(
         file=relative_to_assets("ExitButton.png"))
     button_1 = Button(
+        window,
         image=button_image_1,
         borderwidth=0,
         highlightthickness=0,
@@ -56,7 +55,9 @@ def open_teacher_menu(master):
 
 
 
-    # Implement draging for the button list
+
+
+    # Implement dragging for the button list
     dragging = False
     last_y_position = 0
     buttons_enabled = True
@@ -80,7 +81,7 @@ def open_teacher_menu(master):
                     canvas.move(button, 0, y_movement)
                 last_y_position = canvas.canvasy(y)
 
-            if y_movement > 20 or y_movement < -20:
+            if y_movement > 30 or y_movement < -30:
                 buttons_enabled = False
 
     def stop_drag(event):
@@ -102,25 +103,25 @@ def open_teacher_menu(master):
 
     # Create buttons for each teacher and assign a function to each
     def update_globals(teacher_name):
-        nonlocal buttons_enabled
+        nonlocal buttons_enabled     
         if buttons_enabled:
             if teacher_name == "Požárek Pavel":
                 play_video("Pozi.mp4")
                 window.after(12000, lambda: window.destroy())
                 return
 
-            with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-                data = json.load(f)
+            globals.timetable_data = teacher_name
+            globals.timetable_type = "Teacher"
+            globals.regenerate_timetable = True
 
-            data["timetable_data"] = teacher_name
-            data["timetable_type"] = "Teacher"
-            data["regenerate_timetable"] = True
-
-            with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
-                json.dump(data, f)
+            print("Teacher selected: " + globals.timetable_data)
 
             if window.winfo_exists():
                 window.destroy()
+
+
+
+
 
     with open(OUTPUT_PATH / "timetableData" / "teachers.json", "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -131,7 +132,7 @@ def open_teacher_menu(master):
     for teacher in data["teachers"]:
         teacher_name = list(teacher.keys())[0]
 
-        button = Button(image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
+        button = Button(window, image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
                         text=teacher_name, font=("Kanit Light", 20), compound="center",
                         command=lambda teacher_name=teacher_name: update_globals(teacher_name),
                         activebackground="#2F2F2F", activeforeground="#2F2F2F",
