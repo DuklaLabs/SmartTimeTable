@@ -8,6 +8,8 @@ import aiohttp
 from bs4 import BeautifulSoup
 import orjson
 
+import globals
+
 logging.basicConfig(level=logging.INFO)
 
 OUTPUT_PATH = Path(__file__).parent
@@ -205,7 +207,11 @@ def add_teacher(teacher_name, teacher_info):
     with open(teachers_file, 'w', encoding='utf-8') as file:
         json.dump(data, file)
 
-async def main():
+
+
+
+
+async def get_timetable_data():
     print("Started fetching data...")
     script_start_time = time.time()
 
@@ -242,12 +248,11 @@ async def main():
     await get_timeTables(url_s_parametrem, 'rooms.json')
     print("Rooms timetable data fetched successfully")
 
+    globals.regenerate_timetable = True
+    
     script_end_time = time.time()
 
     logging.info(f"Network time: {network_time:.2f} s  -async")
     logging.info(f"Processing time: {processing_time:.2f} s  -async")
     logging.info(f"Total runtime: {script_end_time - script_start_time:.2f} s")
     logging.info(f"Total runs: {runs}")
-
-if __name__ == "__main__":
-    asyncio.run(main())

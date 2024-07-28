@@ -9,11 +9,15 @@ from tkinter import Tk, Canvas, Button, PhotoImage, Label
 import datetime
 import json
 from PIL import Image, ImageTk
+import asyncio
 
 import globals
 from teachers import open_teachers_menu
 from classes import open_classes_menu
 from rooms import open_rooms_menu
+from timetableInfo import show_timetable_info
+from credits import show_credits
+from getTimetableData import get_timetable_data
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -138,6 +142,8 @@ image_2 = canvas.create_image(
 def check_timetable_inactivity():
     global timetable_inactivity
     if timetable_inactivity >= 30:
+        print("Timetable inactive for too long, changing to default")
+
         globals.timetable_type = default_timetable_type
         globals.timetable_data = default_timetable_data
         globals.timetable_time_period = "Permanent"
@@ -194,6 +200,7 @@ def generate_timetable():
         with open(file_path, "r", encoding="utf-8") as file:
             timetable_data = json.load(file)
     except FileNotFoundError:
+        print("File not found, retrying")
         global timetable_inactivity
         timetable_inactivity = 10000
         check_timetable_inactivity()
@@ -430,6 +437,10 @@ def destroy_dates():
 
 
 
+
+
+
+
 def rotate_image(image, angle):
     rotated_image = image.rotate(angle)
     return ImageTk.PhotoImage(rotated_image)
@@ -442,6 +453,15 @@ def update_image():
     canvas.tag_raise(loading)  # Place the loading image on top of everything else
     root.after(10, update_image)  # Call this function again after 100 ms
 
+# Function to run the async function and handle completion
+def run_get_timetable_data():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(get_timetable_data())
+    print("Timetable data fetching completed")
+    button_6.place(x=964.0, y=14.0, width=50.0, height=50.0)
+    generate_timetable()
+
+
 
 image = Image.open(relative_to_assets("Loading.png"))
 photo_image = ImageTk.PhotoImage(image)
@@ -453,8 +473,6 @@ angle = 0
 update_image()
 
 
-
-
 def fetch_data():
 
     # Create a big "Mimo provoz!" text centered in the middle of the screen
@@ -464,39 +482,18 @@ def fetch_data():
     # Hide the refresh button
     button_6.place_forget()
 
-
-    # Load the data from the JSON file
-    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
-    data["fetch_data"] = True
-    # Write the data back to the JSON file
-    with open(OUTPUT_PATH / "globals.json", "w", encoding="utf-8") as f:
-        json.dump(data, f)
-    
-    # Start the getTimeTableData.py script
-    Popen([sys.executable, str(OUTPUT_PATH / "getTimeTableData.py")])
-    
-    # Wait until the fetch_data is set to False
-    check_fetch_data()
+    # Start the async function to fetch the data
+    run_get_timetable_data()
 
     # Delete the big text after 1second
     # root.after(2000, lambda: canvas.delete(big_text))
 
 
 
-def check_fetch_data():
-    with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
 
-    if data["fetch_data"]:
-        # If fetch_data is still True, check again after 1 second
-        root.after(1000, check_fetch_data)
-    else:
-            # Enable the refresh button
-        print("Fetching data done")
-        button_6.place(x=964.0, y=14.0, width=50.0, height=50.0)
-        generate_timetable()
-    
+
+
+
 
 
 button_image_1 = PhotoImage(
@@ -505,7 +502,7 @@ button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "credits.py")]),
+    command=lambda: show_credits(root),
     relief="flat"
 )
 button_1.place(
@@ -521,7 +518,7 @@ button_2 = Button(
     image=button_image_2,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: Popen([sys.executable, str(OUTPUT_PATH / "info.py")]),
+    command=lambda: show_timetable_info(root),
     relief="flat"
 )
 button_2.place(
