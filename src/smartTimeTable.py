@@ -38,7 +38,7 @@ root.geometry("1024x600")
 root.configure(bg="#FFFFFF")
 root.title("SmartTimeTable V0.4 by DuklaLabs")
 root.attributes("-fullscreen", True)
-#root.config(cursor="none")
+root.config(cursor="none")
 
 timetable_inactivity = 0
 

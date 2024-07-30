@@ -20,7 +20,7 @@ def open_teachers_menu(master):
     window.configure(bg="#FFFFFF")
     window.title("SmartTimeTable V0.4 by DuklaLabs - Teachers")
     window.attributes("-fullscreen", True)
-    # window.config(cursor="none")
+    window.config(cursor="none")
     window.lift()
 
     # Create a canvas for the secondary window

@@ -19,6 +19,7 @@ def open_rooms_menu(master):
     window.configure(bg="#FFFFFF")
     window.title("SmartTimeTable V0.4 by DuklaLabs - Classes")
     window.attributes("-fullscreen", True)
+    window.config(cursor="none")
     window.lift()
 
     canvas = Canvas(

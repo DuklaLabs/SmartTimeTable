@@ -238,6 +238,8 @@ def add_teacher(teacher_name, teacher_info):
     with open(teachers_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
     data["teachers"].append({teacher_name: teacher_info})
+    # Manually add Pavel Požárek to the end of the list
+    data["teachers"].append({"Pavel Požárek": {"Permanent": "none", "Actual": "none", "Next": "none"}})
     data["teachers"] = sorted(data["teachers"], key=lambda x: list(x.keys())[0])
     with open(teachers_file, 'w', encoding='utf-8') as file:
         json.dump(data, file)
