@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Canvas, Button, PhotoImage, Toplevel
+from tkinter import Canvas, Button, PhotoImage, Toplevel, Tk
 import textwrap
 import json
 import globals
@@ -85,3 +85,8 @@ def show_timetable_info(master):
 
     window.resizable(False, False)
     window.mainloop()
+
+
+if __name__ == "__main__":
+    root = Tk()
+    show_timetable_info(root)

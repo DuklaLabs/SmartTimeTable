@@ -213,8 +213,6 @@ def generate_timetable():
         "room": {"main": "subject", "top": "teacher", "bottom": "group"},
     }
 
-    
-
     text_fields = type_to_text_fields[timetable_type]
 
     # Get the current position of the timetable
@@ -242,7 +240,6 @@ def generate_timetable():
                     main_text = lesson.get(text_fields["main"], "").replace(" celá", "")
                     bottom_text = lesson.get(text_fields["bottom"], "").replace(" celá", "")
                     top_text = lesson.get(text_fields["top"], "").replace(" celá", "")
-
                 # If there is no top or bottom text then center the main text
                 if top_text == "" and bottom_text == "":
                     main_text_center_offset = 30

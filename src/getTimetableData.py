@@ -116,43 +116,65 @@ async def get_timeTables(url, Json_file):
         await asyncio.gather(*tasks)
 
 def get_lessons(soup):
+         
     days = soup.find_all('div', class_="bk-cell-wrapper")
-    day_json = {}
+    skip = False
     for day in days:
-        day_json.update(process_day(day))
+        hours = soup.find_all('div', class_="bk-timetable-cell")
+        day_json = orjson.loads(b'{}')
+        nmbr = 0
+        sp=0
+        for hour in hours:
+            sp = []
+            check = hour.find_all('div', class_="day-item-hover multi")
+            if check:
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            check = None
+            check = hour.find_all('div', class_="day-item-hover")
+            if check and len(check) == 1:  # Check if there is only one item in check
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            check = None
+            check = hour.find_all('div', class_="day-item-hover multi pink")
+            if check:
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            check = None
+            check = hour.find_all('div', class_="day-item-hover  border-levy green h-100")
+            if check:
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            check = None
+            check = hour.find_all('div', class_="day-item-hover  pink ")
+            if check:
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            check = None
+            check = hour.find_all('div', class_="day-item-hover  pink hasAbsent")
+            if check:
+                for cell in check:
+                    sp.append(get_data(cell, nmbr))
+            
+            check = None
+            check = hour.find_all('div', class_="day-item-volno border-levy border-horni border-pravy")
+            if check:
+                for cell in check:
+                    skip = True
+
+            if sp:
+                day_json[str(nmbr)] = sp        
+
+        
+            if skip:
+                skip = False
+                nmbr += 11
+            else:
+                nmbr += 1
+            
     return day_json
 
-def process_day(day):
-    day_dict = {}
-    hours = day.find_all('div', class_="bk-timetable-cell")
-    nmbr = 0
-    for hour in hours:
-        lessons = process_hour(hour, nmbr)
-        if lessons:
-            day_dict[str(nmbr)] = lessons
-        nmbr += determine_hour_increment(hour)
-    return day_dict
 
-def process_hour(hour, nmbr):
-    lesson_types = [
-        "day-item-hover multi",
-        "day-item-hover",
-        "day-item-hover multi pink",
-        "day-item-hover border-levy green h-100",
-        "day-item-hover pink",
-        "day-item-hover pink hasAbsent"
-    ]
-    lessons = []
-    for lesson_type in lesson_types:
-        lessons.extend(check_cell(hour, lesson_type, nmbr))
-    return lessons
-
-def check_cell(hour, class_, nmbr):
-    cells = hour.find_all('div', class_=class_)
-    return [get_data(cell, nmbr) for cell in cells]
-
-def determine_hour_increment(hour):
-    return 11 if hour.find_all('div', class_="day-item-volno border-levy border-horni border-pravy") else 1
 
 def get_data(cell, nmbr):
     if cell:
@@ -160,6 +182,15 @@ def get_data(cell, nmbr):
         detail_json = orjson.loads(js.encode('utf-8'))
         type_ = detail_json.get('type')
         group = room = lesson_ = subject = teacher = subject_text = teacher_text = change_info = theme = absencetext = has_absent = absent_info_text = removed_info = ""
+        
+        # Store the result of detail_json.get() in variables
+        subjecttext = detail_json.get('subjecttext')
+        teacher = detail_json.get('teacher')
+        changeinfo = detail_json.get('changeinfo')
+        theme = detail_json.get('theme')
+        absencetext = detail_json.get('absencetext')
+        hasAbsent = detail_json.get('hasAbsent')
+        absentInfoText = detail_json.get('absentInfoText')
 
         if type_ == "absent":
             subject = detail_json.get('absentinfo')
@@ -169,17 +200,21 @@ def get_data(cell, nmbr):
         elif type_ == "atom":
             group = detail_json.get('group')
             room = detail_json.get('room')
-            lesson_ = detail_json.get('lesson')
-            subject = detail_json.get('subject')
-            teacher = detail_json.get('teacher')
-            subject_text = detail_json.get('subjecttext')
-            teacher_text = detail_json.get('teachertext')
-            change_info = detail_json.get('changeinfo')
-            theme = detail_json.get('theme')
-            absencetext = detail_json.get('absencetext')
-            has_absent = "true" if detail_json.get('hasAbsent') else "false"
-            absent_info_text = detail_json.get('absentInfoText')
-
+            lesson_ = subjecttext.split('|').pop(2).strip().split(' ')[0] if subjecttext else ""
+            subject = cell.find('div', class_="middle zapsano")
+            subject = subject.text if subject else cell.find('div', class_="middle").text
+            teacher = cell.find('div', class_="bottom").find('span')
+            teacher = teacher.text if teacher else ""
+            subject_text = subjecttext.split('|').pop(0).strip() if subjecttext else ""
+            teacher_text = teacher if teacher else ""
+            change_info = changeinfo if changeinfo else ""
+            theme = theme if theme else ""
+            absencetext = "" if None else absencetext
+            has_absent = "true" if hasAbsent else "false"
+            absent_info_text = absentInfoText if absentInfoText else ""
+        else:
+            print("error"+ type_)
+        # Vytvoření objektu s informacemi o hodině
         lesson = {
             "lesson": lesson_,
             "group": group,
@@ -256,3 +291,7 @@ async def get_timetable_data():
     logging.info(f"Processing time: {processing_time:.2f} s  -async")
     logging.info(f"Total runtime: {script_end_time - script_start_time:.2f} s")
     logging.info(f"Total runs: {runs}")
+
+
+if __name__ == "__main__":
+    asyncio.run(get_timetable_data())

@@ -1,54 +1,304 @@
 {
     "rooms": [
-        {"104": {"info":"Informace o učebně 104", "name":"Učebna 104"}},
-        {"106": {"info":"Informace o učebně 106", "name":"Učebna 106"}},
-        {"108": {"info":"Informace o učebně 108", "name":"Učebna 108"}},
-        {"111": {"info":"Informace o učebně 111", "name":"Učebna 111"}},
-        {"113": {"info":"Informace o učebně 113", "name":"Učebna 113"}},
-        {"115": {"info":"Informace o učebně 115", "name":"Učebna 115"}},
-        {"117": {"info":"Informace o učebně 117", "name":"Učebna 117"}},
-        {"118": {"info":"Informace o učebně 118", "name":"Učebna 118"}},
-        {"201": {"info":"Informace o učebně 201", "name":"Učebna 201"}},
-        {"202": {"info":"Informace o učebně 202", "name":"Učebna 202"}},
-        {"203": {"info":"Informace o učebně 203", "name":"Učebna 203"}},
-        {"205": {"info":"Informace o učebně 205", "name":"Učebna 205"}},
-        {"206": {"info":"Informace o učebně 206", "name":"Učebna 206"}},
-        {"207": {"info":"Informace o učebně 207", "name":"Učebna 207"}},
-        {"210": {"info":"Informace o učebně 210", "name":"Učebna 210"}},
-        {"212": {"info":"Informace o učebně 212", "name":"Učebna 212"}},
-        {"213": {"info":"Informace o učebně 213", "name":"Učebna 213"}},
-        {"215": {"info":"Informace o učebně 215", "name":"Učebna 215"}},
-        {"216": {"info":"Informace o učebně 216", "name":"Učebna 216"}},
-        {"220": {"info":"Informace o učebně 220", "name":"Učebna 220"}},
-        {"302": {"info":"Informace o učebně 302", "name":"Učebna 302"}},
-        {"303": {"info":"Informace o učebně 303", "name":"Učebna 303"}},
-        {"304": {"info":"Informace o učebně 304", "name":"Učebna 304"}},
-        {"306": {"info":"Informace o učebně 306", "name":"Učebna 306"}},
-        {"307": {"info":"Informace o učebně 307", "name":"Učebna 307"}},
-        {"308": {"info":"Informace o učebně 308", "name":"Učebna 308"}},
-        {"311": {"info":"Informace o učebně 311", "name":"Učebna 311"}},
-        {"313": {"info":"Informace o učebně 313", "name":"Učebna 313"}},
-        {"314": {"info":"Informace o učebně 314", "name":"Učebna 314"}},
-        {"316": {"info":"Informace o učebně 316", "name":"Učebna 316"}},
-        {"317": {"info":"Informace o učebně 317", "name":"Učebna 317"}},
-        {"404": {"info":"Informace o učebně 404", "name":"Učebna 404"}},
-        {"406": {"info":"Informace o učebně 406", "name":"Učebna 406"}},
-        {"407": {"info":"Informace o učebně 407", "name":"Učebna 407"}},
-        {"411": {"info":"Informace o učebně 411", "name":"Učebna 411"}},
-        {"502": {"info":"Informace o učebně 502", "name":"Učebna 502"}},
-        {"D12": {"info":"Informace o učebně D12", "name":"Učebna D12"}},
-        {"D13": {"info":"Informace o učebně D13", "name":"Učebna D13"}},
-        {"D14": {"info":"Informace o učebně D14", "name":"Učebna D14"}},
-        {"D15": {"info":"Informace o učebně D15", "name":"Učebna D15"}},
-        {"D16": {"info":"Informace o učebně D16", "name":"Učebna D16"}},
-        {"D21": {"info":"Informace o učebně D21", "name":"Učebna D21"}},
-        {"D24": {"info":"Informace o učebně D24", "name":"Učebna D24"}},
-        {"D25": {"info":"Informace o učebně D25", "name":"Učebna D25"}},
-        {"D26": {"info":"Informace o učebně D26", "name":"Učebna D26"}},
-        {"D27": {"info":"Informace o učebně D27", "name":"Učebna D27"}},
-        {"D4": {"info":"Informace o učebně D4", "name":"Učebna D4"}},
-        {"D6": {"info":"Informace o učebně D6", "name":"Učebna D6"}},
-        {"D7": {"info":"Informace o učebně D7", "name":"Učebna D7"}},
-        {"D8": {"info":"Informace o učebně D8", "name":"Učebna D8"}}
+        {
+            "104": {
+                "info": "Informace o učebně 104",
+                "name": "Učebna 104"
+            }
+        },
+        {
+            "106": {
+                "info": "Informace o učebně 106",
+                "name": "Učebna 106"
+            }
+        },
+        {
+            "108": {
+                "info": "Informace o učebně 108",
+                "name": "Učebna 108"
+            }
+        },
+        {
+            "111": {
+                "info": "Informace o učebně 111",
+                "name": "Učebna 111"
+            }
+        },
+        {
+            "113": {
+                "info": "Informace o učebně 113",
+                "name": "Učebna 113"
+            }
+        },
+        {
+            "115": {
+                "info": "Informace o učebně 115",
+                "name": "Učebna 115"
+            }
+        },
+        {
+            "117": {
+                "info": "Informace o učebně 117",
+                "name": "Učebna 117"
+            }
+        },
+        {
+            "118": {
+                "info": "Informace o učebně 118",
+                "name": "Učebna 118"
+            }
+        },
+        {
+            "201": {
+                "info": "Informace o učebně 201",
+                "name": "Učebna 201"
+            }
+        },
+        {
+            "202": {
+                "info": "Informace o učebně 202",
+                "name": "Učebna 202"
+            }
+        },
+        {
+            "203": {
+                "info": "Informace o učebně 203",
+                "name": "Učebna 203"
+            }
+        },
+        {
+            "205": {
+                "info": "Informace o učebně 205",
+                "name": "Učebna 205"
+            }
+        },
+        {
+            "206": {
+                "info": "Informace o učebně 206",
+                "name": "Učebna 206"
+            }
+        },
+        {
+            "207": {
+                "info": "Informace o učebně 207",
+                "name": "Učebna 207"
+            }
+        },
+        {
+            "210": {
+                "info": "Informace o učebně 210",
+                "name": "Učebna 210"
+            }
+        },
+        {
+            "212": {
+                "info": "Informace o učebně 212",
+                "name": "Učebna 212"
+            }
+        },
+        {
+            "213": {
+                "info": "Informace o učebně 213",
+                "name": "Učebna 213"
+            }
+        },
+        {
+            "215": {
+                "info": "Informace o učebně 215",
+                "name": "Učebna 215"
+            }
+        },
+        {
+            "216": {
+                "info": "Informace o učebně 216",
+                "name": "Učebna 216"
+            }
+        },
+        {
+            "220": {
+                "info": "Informace o učebně 220",
+                "name": "Učebna 220"
+            }
+        },
+        {
+            "302": {
+                "info": "Informace o učebně 302",
+                "name": "Učebna 302"
+            }
+        },
+        {
+            "303": {
+                "info": "Informace o učebně 303",
+                "name": "Učebna 303"
+            }
+        },
+        {
+            "304": {
+                "info": "Informace o učebně 304",
+                "name": "Učebna 304"
+            }
+        },
+        {
+            "306": {
+                "info": "Informace o učebně 306",
+                "name": "Učebna 306"
+            }
+        },
+        {
+            "307": {
+                "info": "Informace o učebně 307",
+                "name": "Učebna 307"
+            }
+        },
+        {
+            "308": {
+                "info": "Informace o učebně 308",
+                "name": "Učebna 308"
+            }
+        },
+        {
+            "311": {
+                "info": "Informace o učebně 311",
+                "name": "Učebna 311"
+            }
+        },
+        {
+            "313": {
+                "info": "Informace o učebně 313",
+                "name": "Učebna 313"
+            }
+        },
+        {
+            "314": {
+                "info": "Informace o učebně 314",
+                "name": "Učebna 314"
+            }
+        },
+        {
+            "316": {
+                "info": "Informace o učebně 316",
+                "name": "Učebna 316"
+            }
+        },
+        {
+            "317": {
+                "info": "Informace o učebně 317",
+                "name": "Učebna 317"
+            }
+        },
+        {
+            "404": {
+                "info": "Informace o učebně 404",
+                "name": "Učebna 404"
+            }
+        },
+        {
+            "406": {
+                "info": "Informace o učebně 406",
+                "name": "Učebna 406"
+            }
+        },
+        {
+            "407": {
+                "info": "Informace o učebně 407",
+                "name": "Učebna 407"
+            }
+        },
+        {
+            "411": {
+                "info": "Informace o učebně 411",
+                "name": "Učebna 411"
+            }
+        },
+        {
+            "502": {
+                "info": "Informace o učebně 502",
+                "name": "Učebna 502"
+            }
+        },
+        {
+            "D12": {
+                "info": "Informace o učebně D12",
+                "name": "Učebna D12"
+            }
+        },
+        {
+            "D13": {
+                "info": "Informace o učebně D13",
+                "name": "Učebna D13"
+            }
+        },
+        {
+            "D14": {
+                "info": "Informace o učebně D14",
+                "name": "Učebna D14"
+            }
+        },
+        {
+            "D15": {
+                "info": "Informace o učebně D15",
+                "name": "Učebna D15"
+            }
+        },
+        {
+            "D16": {
+                "info": "Informace o učebně D16",
+                "name": "Učebna D16"
+            }
+        },
+        {
+            "D21": {
+                "info": "Informace o učebně D21",
+                "name": "Učebna D21"
+            }
+        },
+        {
+            "D24": {
+                "info": "Informace o učebně D24",
+                "name": "Učebna D24"
+            }
+        },
+        {
+            "D25": {
+                "info": "Informace o učebně D25",
+                "name": "Učebna D25"
+            }
+        },
+        {
+            "D26": {
+                "info": "Informace o učebně D26",
+                "name": "Učebna D26"
+            }
+        },
+        {
+            "D27": {
+                "info": "Informace o učebně D27",
+                "name": "Učebna D27"
+            }
+        },
+        {
+            "D4": {
+                "info": "Informace o učebně D4",
+                "name": "Učebna D4"
+            }
+        },
+        {
+            "D6": {
+                "info": "Informace o učebně D6",
+                "name": "Učebna D6"
+            }
+        },
+        {
+            "D7": {
+                "info": "Informace o učebně D7",
+                "name": "Učebna D7"
+            }
+        },
+        {
+            "D8": {
+                "info": "Informace o učebně D8",
+                "name": "Učebna D8"
+            }
+        }
     ]
 }

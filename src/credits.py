@@ -157,3 +157,9 @@ def show_credits(master):
 
     window.resizable(False, False)
     window.mainloop()
+
+
+if __name__ == "__main__":
+    root = Tk()
+    show_credits(root)
+    root.destroy()

@@ -127,7 +127,9 @@ def open_classes_menu(master):
     window.mainloop()
 
 
-
+if __name__ == "__main__":
+    root = Tk()
+    open_classes_menu(root)
 
 
 

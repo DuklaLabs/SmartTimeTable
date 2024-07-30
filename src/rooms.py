@@ -187,11 +187,12 @@ def open_rooms_menu(master):
     canvas.bind("<B1-Motion>", drag_d)
     canvas.bind("<ButtonRelease-1>", stop_drag_d)
 
-
-
-
-
     window.mainloop()
 
 
+
+if __name__ == "__main__":
+    root = Tk()
+    open_rooms_menu(root)
+    root.mainloop()
 

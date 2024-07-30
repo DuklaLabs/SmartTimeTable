@@ -1,6 +1,30 @@
 {
     "classes": [
         {
+            "0.EE": {
+                "info": "Informace o třídě 0.EE",
+                "name": "Třída 0.EE"
+            }
+        },
+        {
+            "0.EM": {
+                "info": "Informace o třídě 0.EM",
+                "name": "Třída 0.EM"
+            }
+        },
+        {
+            "0.ER": {
+                "info": "Informace o třídě 0.ER",
+                "name": "Třída 0.ER"
+            }
+        },
+        {
+            "0.S": {
+                "info": "Informace o třídě 0.S",
+                "name": "Třída 0.S"
+            }
+        },
+        {
             "1.EE": {
                 "info": "Informace o třídě 1.EE",
                 "name": "Třída 1.EE"
@@ -50,7 +74,7 @@
         },
         {
             "3.EA": {
-                "info": "Autoři projektu a programátoři",
+                "info": "Informace o třídě 3.EA",
                 "name": "Třída 3.EA"
             }
         },

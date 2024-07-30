@@ -20,3 +20,6 @@ def play_video(video_name):
     
     media_player.stop()
 
+if __name__ == "__main__":
+    play_video("SpinningFish.mp4")
+

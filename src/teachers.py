@@ -180,3 +180,8 @@ def open_teachers_menu(master):
 
     window.resizable(False, False)
     window.mainloop()
+
+if __name__ == "__main__":
+    root = Tk()
+    open_teachers_menu(root)
+    root.mainloop()
