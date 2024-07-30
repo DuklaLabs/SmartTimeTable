@@ -50,6 +50,10 @@ def get_teachers(soup):
     odkazy = soup.find('div', {'id': 'teacher_canvas'}).find('div', class_='bk-canvas-body').find_all('a')
     for odkaz in odkazy:
         teachers["teachers"].append(get_OBJ(odkaz))
+    # Manually add teachers that are not in the list (e.g. teachers that are not teaching this year or have left the school)
+    teachers['teachers'].append({'Požárek Pavel': {'Permanent': 'none', 'Actual': 'none', 'Next': 'none'}})
+    # Sort the teachers by name
+    teachers["teachers"] = sorted(teachers["teachers"], key=lambda x: list(x.keys())[0])
 
 def get_classes(soup):
     odkazy = soup.find('div', {'id': 'class_canvas'}).find('div', class_='bk-canvas-body').find_all('a')
@@ -119,6 +123,7 @@ def get_lessons(soup):
          
     days = soup.find_all('div', class_="bk-cell-wrapper")
     skip = False
+    day_json = None
     for day in days:
         hours = soup.find_all('div', class_="bk-timetable-cell")
         day_json = orjson.loads(b'{}')
@@ -171,6 +176,9 @@ def get_lessons(soup):
                 nmbr += 11
             else:
                 nmbr += 1
+
+            if day_json is None:
+                day_json = orjson.loads(b'{}')
             
     return day_json
 
@@ -238,8 +246,6 @@ def add_teacher(teacher_name, teacher_info):
     with open(teachers_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
     data["teachers"].append({teacher_name: teacher_info})
-    # Manually add Pavel Požárek to the end of the list
-    data["teachers"].append({"Pavel Požárek": {"Permanent": "none", "Actual": "none", "Next": "none"}})
     data["teachers"] = sorted(data["teachers"], key=lambda x: list(x.keys())[0])
     with open(teachers_file, 'w', encoding='utf-8') as file:
         json.dump(data, file)

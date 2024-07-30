@@ -10,6 +10,8 @@ import datetime
 import json
 from PIL import Image, ImageTk
 import asyncio
+import threading
+import concurrent.futures
 
 import globals
 from teachers import open_teachers_menu
@@ -403,7 +405,7 @@ def change_timetable_time_period():
 
     weekdays = ["Po", "Út", "St", "Čt", "Pá"]
     for j in range(5):
-        if weekdays_texts[j] is not None:
+        if weekdays_texts[j] is not None and canvas.winfo_exists():
             canvas.delete(weekdays_texts[j])
             weekdays_texts[j] = None
             root.update()
@@ -450,16 +452,6 @@ def update_image():
     canvas.tag_raise(loading)  # Place the loading image on top of everything else
     root.after(10, update_image)  # Call this function again after 100 ms
 
-# Function to run the async function and handle completion
-def run_get_timetable_data():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(get_timetable_data())
-    print("Timetable data fetching completed")
-    button_6.place(x=964.0, y=14.0, width=50.0, height=50.0)
-    generate_timetable()
-
-
-
 image = Image.open(relative_to_assets("Loading.png"))
 photo_image = ImageTk.PhotoImage(image)
 # Place the loading image in the middle of the refresh button
@@ -470,23 +462,36 @@ angle = 0
 update_image()
 
 
+def run_async(coroutine, future):
+    try:
+        result = asyncio.run(coroutine)
+        future.set_result(result)
+    except Exception as e:
+        future.set_exception(e)
+
 def fetch_data():
-
-    # Create a big "Mimo provoz!" text centered in the middle of the screen
-    # global big_text
-    # big_text = canvas.create_text(512, 300, anchor="center", text="Mimo provoz!", fill="#0000FF", font=("Inter", 100 * -1))
-
     # Hide the refresh button
     button_6.place_forget()
 
-    # Start the async function to fetch the data
-    run_get_timetable_data()
+    # Create a Future object to track the thread's completion
+    future = concurrent.futures.Future()
 
-    # Delete the big text after 1second
-    # root.after(2000, lambda: canvas.delete(big_text))
+    # Define a callback function to handle completion or failure
+    def on_complete(fut):
+        try:
+            print("Data fetching finished successfully")
+        except Exception as e:
+            print("Data fetching crashed with exception:", e)
+            
+        # Place the button back
+        button_6.place(x=964.0, y=14.0, width=50.0, height=50.0)
+        generate_timetable()
 
+    # Add the callback to the Future object
+    future.add_done_callback(on_complete)
 
-
+    # Run the fetch_data_async function in another thread
+    threading.Thread(target=run_async, args=(get_timetable_data(), future)).start()
 
 
 
