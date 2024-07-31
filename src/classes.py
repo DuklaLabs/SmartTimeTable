@@ -15,7 +15,7 @@ def open_classes_menu(master):
     window = Toplevel(master)
     window.geometry("1024x600")
     window.configure(bg="#FFFFFF")
-    window.title("SmartTimeTable V0.4 by DuklaLabs - Classes")
+    window.title("SmartTimeTable V2.1 by DuklaLabs - Classes")
     window.config(cursor="none")
     window.attributes("-fullscreen", True)
     window.lift()

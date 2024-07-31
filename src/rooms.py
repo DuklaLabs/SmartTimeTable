@@ -17,7 +17,7 @@ def open_rooms_menu(master):
     window = Toplevel(master)
     window.geometry("1024x600")
     window.configure(bg="#FFFFFF")
-    window.title("SmartTimeTable V0.4 by DuklaLabs - Classes")
+    window.title("SmartTimeTable V2.1 by DuklaLabs - Classes")
     window.attributes("-fullscreen", True)
     window.config(cursor="none")
     window.lift()
@@ -50,23 +50,62 @@ def open_rooms_menu(master):
         height=60.0
     )
 
-    canvas.create_text(
-        512.0,
-        45.0,
-        anchor="center",
-        text="Učebny",
-        fill="#D24B49",
-        font=("Kanit Regular", 50 * -1)
-    )
+
+
+
+
+    # Implement dragging for the button lists
+    dragging = False
+    last_y_position = 0
+    buttons_enabled = True
+
+    def start_drag(event):
+        nonlocal dragging, last_y_position, buttons_enabled
+        dragging = True
+        x, y = window.winfo_pointerxy()
+        last_y_position = canvas.canvasy(y)
+        drag_start_position = event.y
+
+    def drag(event):
+        nonlocal last_y_position, dragging, buttons_enabled
+        if dragging:
+            x, y = window.winfo_pointerxy()
+            y_movement = canvas.canvasy(y) - last_y_position
+            number_current_position = canvas.bbox(number_room_button_ids[0])[1]  # Extract only the Y coordinate
+            d_current_position = canvas.bbox(d_room_button_ids[0])[1]  # Extract only the Y coordinate
+
+            if 500 - 50 * len(number_room_buttons) <= number_current_position + y_movement <= 120:
+                for button_id in number_room_button_ids:
+                    canvas.move(button_id, 0, y_movement)
+                last_y_position = canvas.canvasy(y)
+
+            if y_movement > 30 or y_movement < -30:
+                buttons_enabled = False
+
+            if 500 - 50 * len(d_room_buttons) <= d_current_position + y_movement <= 120:
+                for button_id in d_room_button_ids:
+                    canvas.move(button_id, 0, y_movement)
+                last_y_position = canvas.canvasy(y)
+
+    def stop_drag(event):
+        nonlocal dragging, buttons_enabled
+        dragging = False
+        window.after(200, lambda: enable_buttons())
+
+    def enable_buttons():
+        nonlocal buttons_enabled
+        buttons_enabled = True
+
+    canvas.bind("<Button-1>", start_drag)
+    canvas.bind("<B1-Motion>", drag)
+    canvas.bind("<ButtonRelease-1>", stop_drag)
+
+
 
 
     def update_globals(room_name):
-        nonlocal buttons_enabled_number, buttons_enabled_d
-        if buttons_enabled_number or buttons_enabled_d:
-
-            # Load the data from the JSON file
-            with open(OUTPUT_PATH / "globals.json", "r", encoding="utf-8") as f:
-                data = json.load(f)
+        nonlocal buttons_enabled
+        if buttons_enabled:
 
             # Update the values
             globals.timetable_data = room_name
@@ -75,6 +114,7 @@ def open_rooms_menu(master):
 
             print("Room selected: " + globals.timetable_data)
             window.destroy()
+
 
 
     # Load room data from JSON file
@@ -101,13 +141,14 @@ def open_rooms_menu(master):
 
     # Create a list of room buttons and their IDs
     number_room_buttons = []
-    number_room_button_ids = []
     d_room_buttons = []
+    number_room_button_ids = []
     d_room_button_ids = []
 
     button_image = PhotoImage(file=relative_to_assets("RoomButton.png"))
 
     # Iterate over rooms and create buttons for each room
+
     for room in rooms["number"]:
         room_name = list(room.keys())[0]
         button = Button(window, image=button_image, borderwidth=0, bd=0, highlightthickness=0, relief="flat",
@@ -115,8 +156,12 @@ def open_rooms_menu(master):
                         command=lambda room_name=room_name: update_globals(room_name),
                         activebackground="#2F2F2F", activeforeground="#2F2F2F",
                         background="#2F2F2F", foreground="#2F2F2F")
+        button.bind("<Button-1>", start_drag)
+        button.bind("<B1-Motion>", drag)
+        button.bind("<ButtonRelease-1>", stop_drag)
+        button_id = canvas.create_window(412-70, 120 + 50 * len(number_room_buttons), window=button)
         number_room_buttons.append(button)
-        number_room_button_ids.append(button.place(x=312-70, y=100 + 50 * len(number_room_buttons)))
+        number_room_button_ids.append(button_id)
 
     for room in rooms["D"]:
         room_name = list(room.keys())[0]
@@ -125,68 +170,44 @@ def open_rooms_menu(master):
                         command=lambda room_name=room_name: update_globals(room_name),
                         activebackground="#2F2F2F", activeforeground="#2F2F2F",
                         background="#2F2F2F", foreground="#2F2F2F")
+        button.bind("<Button-1>", start_drag)
+        button.bind("<B1-Motion>", drag)
+        button.bind("<ButtonRelease-1>", stop_drag)
+        button_id = canvas.create_window(612+70, 120 + 50 * len(d_room_buttons), window=button)
         d_room_buttons.append(button)
-        d_room_button_ids.append(button.place(x=712-70, y=100 + 50 * len(d_room_buttons)))
+        d_room_button_ids.append(button_id)
 
     
-    # Make the two list separately scrollable
-
-    dragging_number = False
-    last_y_position_number = 0
-    buttons_enabled_number = True
-
-    dragging_d = False
-    last_y_position_d = 0
-    buttons_enabled_d = True
-
-    def start_drag_number(event):
-        nonlocal dragging_number, last_y_position_number
-        dragging_number = True
-        last_y_position_number = event.y
-
-    def drag_number(event):
-        nonlocal last_y_position_number
-        if dragging_number:
-            delta_y = event.y - last_y_position_number
-            canvas.move("all", 0, delta_y)
-            last_y_position_number = event.y
-
-    def stop_drag_number(event):
-        nonlocal dragging_number
-        dragging_number = False
 
 
-    def start_drag_d(event):
-        nonlocal dragging_d, last_y_position_d
-        dragging_d = True
-        last_y_position_d = event.y
+    text_canvas = Canvas(
+        window,
+        bg="#2F2F2F",
+        height=80,
+        width=800,
+        bd=0,
+        highlightthickness=0,
+        relief="ridge"
+    )
+    text_canvas.place(x=0, y=0)
 
-    def drag_d(event):
-        nonlocal last_y_position_d
-        if dragging_d:
-            delta_y = event.y - last_y_position_d
-            canvas.move("all", 0, delta_y)
-            last_y_position_d = event.y
-    
-    def stop_drag_d(event):
-        nonlocal dragging_d
-        dragging_d = False
+    rect = text_canvas.create_rectangle(
+        312.0,
+        110.0,
+        712.0,
+        110.0 + 58 * 65 + 45.0,
+        fill="#2F2F2F",
+        outline=""
+    )
 
-    def enable_buttons_number():
-        nonlocal buttons_enabled_number
-        buttons_enabled_number = True
-
-    def enable_buttons_d():
-        nonlocal buttons_enabled_d
-        buttons_enabled_d = True
-
-    canvas.bind("<Button-1>", start_drag_number)
-    canvas.bind("<B1-Motion>", drag_number)
-    canvas.bind("<ButtonRelease-1>", stop_drag_number)
-
-    canvas.bind("<Button-1>", start_drag_d)
-    canvas.bind("<B1-Motion>", drag_d)
-    canvas.bind("<ButtonRelease-1>", stop_drag_d)
+    text = text_canvas.create_text(
+        512.0,
+        45.0,
+        anchor="center",
+        text="Učebny",
+        fill="#D24B49",
+        font=("Kanit Regular", 50 * -1)
+    )
 
     window.mainloop()
 

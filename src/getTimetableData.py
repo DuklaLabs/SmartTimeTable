@@ -7,6 +7,7 @@ import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
 import orjson
+import locale
 
 import globals
 
@@ -53,7 +54,8 @@ def get_teachers(soup):
     # Manually add teachers that are not in the list (e.g. teachers that are not teaching this year or have left the school)
     teachers['teachers'].append({'Požárek Pavel': {'Permanent': 'none', 'Actual': 'none', 'Next': 'none'}})
     # Sort the teachers by name
-    teachers["teachers"] = sorted(teachers["teachers"], key=lambda x: list(x.keys())[0])
+    locale.setlocale(locale.LC_COLLATE, 'cs_CZ.UTF-8')
+    teachers["teachers"] = sorted(teachers["teachers"], key=lambda x: locale.strxfrm(list(x.keys())[0]))
 
 def get_classes(soup):
     odkazy = soup.find('div', {'id': 'class_canvas'}).find('div', class_='bk-canvas-body').find_all('a')
@@ -246,7 +248,9 @@ def add_teacher(teacher_name, teacher_info):
     with open(teachers_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
     data["teachers"].append({teacher_name: teacher_info})
-    data["teachers"] = sorted(data["teachers"], key=lambda x: list(x.keys())[0])
+    # Sort the list by teacher name using czech alphabet
+    locale.setlocale(locale.LC_COLLATE, 'cs_CZ.UTF-8')
+    data["teachers"] = sorted(data["teachers"], key=lambda x: locale.strxfrm(list(x.keys())[0]))
     with open(teachers_file, 'w', encoding='utf-8') as file:
         json.dump(data, file)
 

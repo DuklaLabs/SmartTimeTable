@@ -20,7 +20,7 @@ def show_credits(master):
     window = Toplevel(master)
     window.geometry("1024x600")
     window.configure(bg = "#FFFFFF")
-    window.title("SmartTimeTable V0.4 - Credits")
+    window.title("SmartTimeTable V2.1 - Credits")
     window.attributes("-fullscreen", True)
     window.config(cursor = "none")
 
@@ -62,7 +62,7 @@ def show_credits(master):
         512.0,
         50.0,
         anchor="center",
-        text="SmartTimeTable V0.4 by DuklaLabs",
+        text="SmartTimeTable V2.1 by DuklaLabs",
         fill="#D24B49",
         font=("Kanit Regular", 40 * -1)
     )

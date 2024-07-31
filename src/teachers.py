@@ -18,7 +18,7 @@ def open_teachers_menu(master):
     window = Toplevel(master)
     window.geometry("1024x600")
     window.configure(bg="#FFFFFF")
-    window.title("SmartTimeTable V0.4 by DuklaLabs - Teachers")
+    window.title("SmartTimeTable V2.1 by DuklaLabs - Teachers")
     window.attributes("-fullscreen", True)
     window.config(cursor="none")
     window.lift()
@@ -76,7 +76,7 @@ def open_teachers_menu(master):
             y_movement = canvas.canvasy(y) - last_y_position
             current_position = canvas.bbox(teacher_buttons[0])[1]  # Extract only the Y coordinate
 
-            if -3200 <= current_position + y_movement <= 120:
+            if 500 - 65 * len(teacher_buttons) <= current_position + y_movement <= 120:
                 for button in teacher_buttons:
                     canvas.move(button, 0, y_movement)
                 last_y_position = canvas.canvasy(y)
